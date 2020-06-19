@@ -20,6 +20,8 @@ class HomePageController extends Controller
         if($request->isMethod('get')) {
             $categories = Category::with('tag')->orderBy('category')->get();
             return view('admin.pages.add_homeslider', compact('categories'));
+        } else if($request->isMethod('post')) {
+            dd($request->all());
         }
     }
 }

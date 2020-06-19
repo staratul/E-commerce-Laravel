@@ -19,7 +19,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{ asset('dashboard/dist/css/select2-bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('dashboard/dist/css/toastr.min.css') }}">
   <link rel="stylesheet" href="{{ asset('dashboard/dist/css/tagsinput.css') }}">
-  <link href="{{ asset('dashboard/dist/summernotes/summernote-bs4.min.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('css/trix.css') }}">
   <style>
       .btn-light {
           background-color: white;
@@ -211,7 +211,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{{ asset('dashboard/dist/js/select2.full.min.js') }}"></script>
 <script src="{{ asset('dashboard/dist/js/toastr.min.js') }}"></script>
 <script src="{{ asset('dashboard/dist/js/tagsinput.js') }}"></script>
-<script src="{{ asset('dashboard/dist/summernotes/summernote-bs4.min.js') }}"></script>
+<script src="{{ asset('js/trix.js') }}"></script>
 @stack('js')
 </body>
 </html>
