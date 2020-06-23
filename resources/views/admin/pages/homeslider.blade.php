@@ -26,7 +26,30 @@
           <div class="row">
             <a type="button" class="btn btn-light ml-2 py-2" href="{{ route('add.home.slider') }}"><i class="fas fa-plus mr-1"></i>Add</a>
             <div class="col-md-12 my-3">
-                <div id="jsGrid"></div>
+                <table class="table table-bordered data-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Image</th>
+                            <th>Category</th>
+                            <th>Title</th>
+                            <th>Tags</th>
+                            <th>Offer</th>
+                            <th width="100px">Action</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>#No</th>
+                            <th>#Image</th>
+                            <th>#Category</th>
+                            <th>#Title</th>
+                            <th>#Tags</th>
+                            <th>#Offer</th>
+                            <th width="100px">#Action</th>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
           </div>
           <!-- /.row -->
@@ -39,10 +62,21 @@
 
 @push('js')
 <script>
-    // Global variable
-    let counter = 1;
-    $(function() {
-
+    $(() => {
+        let table = $('.data-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('admin.home.slider') }}",
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'image', name: 'image'},
+                {data: 'category.category', name: 'category.category'},
+                {data: 'title', name: 'title'},
+                {data: 'tags', name: 'tags'},
+                {data: 'offer', name: 'offer'},
+                {data: 'action', name: 'action', orderable: false, searchable: false}
+            ]
+        });
     });
 </script>
 @endpush

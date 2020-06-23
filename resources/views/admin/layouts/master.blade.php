@@ -19,6 +19,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{ asset('dashboard/dist/css/select2-bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('dashboard/dist/css/toastr.min.css') }}">
   <link rel="stylesheet" href="{{ asset('dashboard/dist/css/tagsinput.css') }}">
+  <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
   <link rel="stylesheet" href="{{ asset('css/trix.css') }}">
   <style>
       .btn-light {
@@ -207,6 +208,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('dashboard/dist/js/jsgrid.min.js') }}"></script>
 <script src="{{ asset('dashboard/dist/js/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('dashboard/dist/js/additional-methods.min.js') }}"></script>
 <script src="{{ asset('dashboard/dist/js/select2.full.min.js') }}"></script>
 <script src="{{ asset('dashboard/dist/js/toastr.min.js') }}"></script>

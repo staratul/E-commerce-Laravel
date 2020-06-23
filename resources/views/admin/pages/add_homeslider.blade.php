@@ -37,16 +37,16 @@
                </div>
                <!-- /.card-header -->
                <div class="card-body">
-                  <form action="{{ route('add.home.slider') }}" method="POST" id="addHomeSlider">
+                  <form action="{{ route('add.home.slider') }}" method="POST" id="addHomeSlider" enctype="multipart/form-data">
                      @csrf
                      <div class="row">
                         <div class="col-md-6">
                            <div class="form-group">
                               <label>Category</label>
-                              <select class="form-control select2bs4" name="category_id" id="category_id" style="width: 100%;" required>
+                              <select class="form-control select2bs4" name="category_id" id="category_id" style="width: 100%;" >
                                  <option selected="selected" value="">Select Category</option>
                                  @foreach ($categories as $category)
-                                 <option value="{{ $category->id }}">{{ $category->category }}</option>
+                                    <option value="{{ $category->id }}">{{ $category->category }}</option>
                                  @endforeach
                               </select>
                               <span id="category_id_error"></span>
@@ -55,7 +55,7 @@
                         <div class="col-md-6">
                            <div class="form-group">
                               <label>Tags</label>
-                              <select class="select2bs4" multiple="multiple" name="tags" id="tags" data-placeholder="Select Tags" style="width: 100%;" multiple required>
+                              <select class="select2bs4" multiple="multiple" name="tags" id="tags" data-placeholder="Select Tags" style="width: 100%;" multiple >
                               </select>
                               <span id="tags_error"></span>
                            </div>
@@ -63,21 +63,21 @@
                         <div class="col-md-6">
                            <div class="form-group">
                               <label for="title">Title</label>
-                              <input type="text" class="form-control" name="title" placeholder="Title" required>
+                              <input type="text" class="form-control" name="title" placeholder="Title" >
                               <span id="title_error"></span>
                            </div>
                         </div>
                         <div class="col-md-6">
                            <div class="form-group">
                               <label for="offer">Offer</label>
-                              <input type="number" min="1" max="99" class="form-control" name="offer" placeholder="Offer" required>
+                              <input type="number" min="1" max="99" class="form-control" name="offer" placeholder="Offer" >
                               <span id="offer_error"></span>
                            </div>
                         </div>
                         <div class="col-md-6">
                            <div class="form-group">
                               <label for="image">Select Image</label>
-                              <input class="btn btn-info form-control-file" type="file" accept="image/jpg, image/jpeg, image/png, image/gif" name="image" id="image" required>
+                              <input class="btn btn-info form-control-file" type="file" accept="image/jpg, image/jpeg, image/png, image/gif" name="image" id="image" >
                               <span id="image_error"></span>
                            </div>
                         </div>
@@ -104,6 +104,18 @@
 @endsection @push('js')
 <script>
    $(function() {
+        let errors = {!! isset($errors) ? json_encode($errors->all()) : null !!};
+        if(errors) {
+            for(error of errors) {
+                toastr.error(error);
+            }
+        }
+
+        let success = "@if(Session::has('success')) {{ Session::get('success') }} @endif";
+        if(success) {
+            toastr.success(success);
+        }
+
         $("#category_id").on("change", () => {
             $("#category_id").valid();
             let categories,category_id,category,tags, option = "";
@@ -127,6 +139,7 @@
         $('.select2bs4').select2({
             theme: 'bootstrap4'
         });
+
         $("#addHomeSlider").validate({
             ignore: [],
             ignore: ":hidden:not(.textarea),.note-editable.panel-body",
@@ -144,18 +157,11 @@
                 // else
                 //     error.insertAfter(element);
             }
-        })
+        });
    });
 </script> @endpush @push('css')
 <style>
-   #loader {
-   display: none;
-   position: fixed;
-   left: 0px;
-   top: 0px;
-   width: 100%;
-   height: 100%;
-   z-index: 9999;
+   #loader {display: none;: fixed;: 0px;top: 0px;width: 100%;height: 100%;z-index: 9999;
    background: url('/img/loader3.gif') 50% 50% no-repeat rgb(10, 10, 10);
    opacity: .8;
    }
