@@ -5,13 +5,14 @@
       <div id="loader"></div>
       <div class="row mb-2">
          <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Manage Slider</h1>
+            <h1 class="m-0 text-dark">{{ isset($homeSlider) ? 'Edit Slider' : 'Add Slider' }}</h1>
          </div>
          <!-- /.col -->
          <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
                <li class="breadcrumb-item"><a href="{{ route("home") }}">Dashboard</a></li>
-               <li class="breadcrumb-item active">Manage Slider</li>
+               <li class="breadcrumb-item"><a href="{{ route("admin.home.slider") }}">Manage Slider</a></li>
+               <li class="breadcrumb-item active">{{ isset($homeSlider) ? 'Edit Slider' : 'Add Slider' }}</li>
             </ol>
          </div>
          <!-- /.col -->
@@ -42,11 +43,16 @@
                      <div class="row">
                         <div class="col-md-6">
                            <div class="form-group">
+                               <input type="hidden" name="home_slider_id" value="{{ isset($homeSlider) ? $homeSlider->id : '' }}">
                               <label>Category</label>
                               <select class="form-control select2bs4" name="category_id" id="category_id" style="width: 100%;" >
                                  <option selected="selected" value="">Select Category</option>
                                  @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->category }}</option>
+                                    <option value="{{ $category->id }}"
+                                        {{ isset($homeSlider) && $homeSlider->category_id === $category->id ? 'selected' : '' }}
+                                        >
+                                        {{ $category->category }}
+                                    </option>
                                  @endforeach
                               </select>
                               <span id="category_id_error"></span>
@@ -55,7 +61,7 @@
                         <div class="col-md-6">
                            <div class="form-group">
                               <label>Tags</label>
-                              <select class="select2bs4" multiple="multiple" name="tags" id="tags" data-placeholder="Select Tags" style="width: 100%;" multiple >
+                              <select class="select2bs4" multiple="multiple" name="tags[]" id="tags" data-placeholder="Select Tags" style="width: 100%;">
                               </select>
                               <span id="tags_error"></span>
                            </div>
@@ -63,14 +69,14 @@
                         <div class="col-md-6">
                            <div class="form-group">
                               <label for="title">Title</label>
-                              <input type="text" class="form-control" name="title" placeholder="Title" >
+                              <input type="text" class="form-control" name="title" placeholder="Title" value="{{ isset($homeSlider) ? $homeSlider->title : '' }}">
                               <span id="title_error"></span>
                            </div>
                         </div>
                         <div class="col-md-6">
                            <div class="form-group">
                               <label for="offer">Offer</label>
-                              <input type="number" min="1" max="99" class="form-control" name="offer" placeholder="Offer" >
+                              <input type="number" min="1" max="99" class="form-control" name="offer" placeholder="Offer" value="{{ isset($homeSlider) ? $homeSlider->offer : '' }}">
                               <span id="offer_error"></span>
                            </div>
                         </div>
@@ -85,7 +91,7 @@
                         <div class="col-md-12">
                            <div class="form-group">
                               <label for="text">Sort Text</label>
-                              <input id="text" type="hidden" name="content">
+                              <input id="text" type="hidden" name="content" value="{!! isset($homeSlider) ? $homeSlider->content : '' !!}">
                               <trix-editor input="text"></trix-editor>
                            </div>
                         </div>
@@ -118,19 +124,27 @@
 
         $("#category_id").on("change", () => {
             $("#category_id").valid();
-            let categories,category_id,category,tags, option = "";
+            let categories,category_id,category,tags, option = "", sliderTags, isMatch = '';
             $("#tags").html(option);
             categories = {!! isset($categories) ? $categories : [] !!};
+            sliderTags = "{!! isset($homeSlider) ? $homeSlider->tags : '' !!}".split(',');
             category_id = $("#category_id").val();
             category = categories.filter(cat => cat.id === Number(category_id));
-            if(category[0].tag) {
-                tags = category[0].tag.tags.split(",");
-                for(tag of tags) {
-                    option += `<option value="${tag}">${tag}</option>`;
+            if(category.length > 0) {
+                if(category[0].tag) {
+                    tags = category[0].tag.tags.split(",");
+                    for(tag of tags) {
+                        for(st of sliderTags) {
+                            if(st == tag) {
+                                isMatch = 'selected';
+                            }
+                        }
+                        option += `<option ${isMatch} value="${tag}">${tag}</option>`;
+                    }
                 }
             }
             $("#tags").append(option);
-        });
+        }).change();
 
         $('#tags').change(function(){
             $("#tags").valid()

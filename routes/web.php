@@ -14,9 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'Frontend\PageController@index');
 
 Auth::routes();
 
@@ -53,5 +51,9 @@ Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
     Route::any('/tags', 'Admin\HeaderController@tag')->name('admin.tags');
     Route::any('/home-slider', 'Admin\HomePageController@homeSlider')->name('admin.home.slider');
     Route::any('/add-home-slider', 'Admin\HomePageController@addHomeSlider')->name('add.home.slider');
+    Route::get('/edit-home-slider\{homeSlider}', 'Admin\HomePageController@editHomeSlider')
+        ->name('edit-home-slider');
+    Route::get('/delete-home-slider\{homeSlider}', 'Admin\HomePageController@deleteHomeSlider')
+        ->name('delete-home-slider');
 });
 

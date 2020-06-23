@@ -19,4 +19,9 @@ class HomeSlider extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    // public function getOfferAttribute($offer)
+    // {
+    //     return $offer . "%";
+    // }
 }

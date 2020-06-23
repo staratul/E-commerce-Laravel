@@ -26,6 +26,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
           background-color: white;
           border: 1px solid gray;
       }
+      .btn-info {
+          color: white;
+      }
       .btn-light:hover {
           background-color: white;
       }
@@ -157,6 +160,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <a href="{{ route('admin.tags') }}" class="nav-link @if(Route::currentRouteName() === 'admin.tags') active @endif">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Tags</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item has-treeview @if(Route::currentRouteName() === 'admin.products' || Route::currentRouteName() === 'admin.add.product') menu-open @endif">
+              <a href="#" class="nav-link @if(Route::currentRouteName() === 'admin.products' || Route::currentRouteName() === 'admin.add.product') active @endif">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Product
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ route('admin.products') }}" class="nav-link @if(Route::currentRouteName() === 'admin.products') active @endif">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Products</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('admin.add.product') }}" class="nav-link @if(Route::currentRouteName() === 'admin.add.product') active @endif">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Add Product</p>
                   </a>
                 </li>
               </ul>

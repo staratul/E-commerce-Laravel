@@ -10,6 +10,10 @@ class Helper
         return explode(",", $data);
     }
 
+    static function implode($data) {
+        return implode(",", $data);
+    }
+
     static function dateFormat($date)
     {
         $createDate = new DateTime($date);

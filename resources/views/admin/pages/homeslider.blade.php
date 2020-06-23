@@ -35,7 +35,7 @@
                             <th>Title</th>
                             <th>Tags</th>
                             <th>Offer</th>
-                            <th width="100px">Action</th>
+                            <th width="150px">Action</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -63,6 +63,11 @@
 @push('js')
 <script>
     $(() => {
+        let success = "@if(Session::has('success')) {{ Session::get('success') }} @endif";
+        if(success) {
+            toastr.success(success);
+        }
+
         let table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,

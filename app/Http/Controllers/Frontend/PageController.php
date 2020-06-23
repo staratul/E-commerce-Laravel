@@ -3,10 +3,17 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\HomeSlider;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
+    public function index()
+    {
+        $homeSliders = HomeSlider::with('image')->with('category')->latest()->get();
+        return view('welcome', compact('homeSliders'));
+    }
+
     public function contact()
     {
         return view('frontend.pages.contact');

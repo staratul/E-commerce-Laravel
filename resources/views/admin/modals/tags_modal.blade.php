@@ -21,7 +21,6 @@
                     <div class="form-group">
                         <label for="tags">Tags</label>
                         <input type="text" data-role="tagsinput" name="tags" id="tags" class="form-control">
-                        </select>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

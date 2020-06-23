@@ -7,5 +7,7 @@ interface HomeSliderRepositoryInterface
     public function getAllSlider();
 
     public function addHomeSlider($data);
+
+    public function updateHomeslider($data);
 }
 
