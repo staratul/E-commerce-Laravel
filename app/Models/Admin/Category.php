@@ -4,6 +4,7 @@ namespace App\Models\Admin;
 
 use App\Models\Admin\Tag;
 use App\Models\Admin\HomeSlider;
+use App\Models\Admin\ProductSize;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
@@ -23,6 +24,11 @@ class Category extends Model
     public function home_slider()
     {
         return $this->hasOne(HomeSlider::class);
+    }
+
+    public function product_size()
+    {
+        return $this->hasOne(ProductSize::class);
     }
 
 }

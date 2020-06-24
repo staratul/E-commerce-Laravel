@@ -46,14 +46,25 @@ Route::prefix('admin')->group(function() {
 
 Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
     Route::get('/dashboard', 'AdminController@index')->name('admin.dashboard');
+    // Categories Routes
     Route::any('categories', 'Admin\HeaderController@category')->name('admin.categories');
+    // Menues Routes
     Route::any('/menus', 'Admin\HeaderController@menu')->name('admin.menus');
+    // Tags Route
     Route::any('/tags', 'Admin\HeaderController@tag')->name('admin.tags');
+    // Home Slider routes
     Route::any('/home-slider', 'Admin\HomePageController@homeSlider')->name('admin.home.slider');
     Route::any('/add-home-slider', 'Admin\HomePageController@addHomeSlider')->name('add.home.slider');
     Route::get('/edit-home-slider\{homeSlider}', 'Admin\HomePageController@editHomeSlider')
         ->name('edit-home-slider');
     Route::get('/delete-home-slider\{homeSlider}', 'Admin\HomePageController@deleteHomeSlider')
         ->name('delete-home-slider');
+
+    // Product Routes
+    Route::resource('products', 'Admin\Products\ProductController');
+    Route::any('products-size', 'Admin\Products\ProductTypeController@productSize')
+        ->name('products.size');
+    Route::any('products-color', 'Admin\Products\ProductTypeController@productColor')
+        ->name('products.color');
 });
 
