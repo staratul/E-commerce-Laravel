@@ -21,6 +21,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{ asset('dashboard/dist/css/tagsinput.css') }}">
   <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
   <link rel="stylesheet" href="{{ asset('css/trix.css') }}">
+  <link rel="stylesheet" href="{{ asset('dashboard/dist/css/style.css') }}">
   <style>
       .btn-light {
           background-color: white;
@@ -164,8 +165,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </li>
               </ul>
             </li>
-            <li class="nav-item has-treeview @if(Route::currentRouteName() === 'products.index' || Route::currentRouteName() === 'products.store') menu-open @endif">
-              <a href="#" class="nav-link @if(Route::currentRouteName() === 'products.index' || Route::currentRouteName() === 'products.store') active @endif">
+            <li class="nav-item has-treeview @if(Route::currentRouteName() === 'products.index' || Route::currentRouteName() === 'products.create' || Route::currentRouteName() === 'products.size' || Route::currentRouteName() === 'products.color') menu-open @endif">
+              <a href="#" class="nav-link @if(Route::currentRouteName() === 'products.index' || Route::currentRouteName() === 'products.create' || Route::currentRouteName() === 'products.size' || Route::currentRouteName() === 'products.color') active @endif">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                   Product
@@ -180,7 +181,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ route('products.store') }}" class="nav-link @if(Route::currentRouteName() === 'products.store') active @endif">
+                  <a href="{{ route('products.create') }}" class="nav-link @if(Route::currentRouteName() === 'products.create') active @endif">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Add Product</p>
                   </a>
@@ -195,6 +196,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <a href="{{ route('products.color') }}" class="nav-link @if(Route::currentRouteName() === 'products.color') active @endif">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Product Color</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ route('products.state') }}" class="nav-link @if(Route::currentRouteName() === 'products.state') active @endif">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>State</p>
                   </a>
                 </li>
               </ul>
@@ -253,6 +260,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{{ asset('dashboard/dist/js/toastr.min.js') }}"></script>
 <script src="{{ asset('dashboard/dist/js/tagsinput.js') }}"></script>
 <script src="{{ asset('js/trix.js') }}"></script>
+<script>
+    $(() => {
+        $('.alert-danger').fadeIn().delay(5000).fadeOut();
+        $('.alert-success').fadeIn().delay(5000).fadeOut();
+    })
+</script>
 @stack('js')
 </body>
 </html>

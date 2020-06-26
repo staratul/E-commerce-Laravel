@@ -3,6 +3,7 @@
 namespace App\Models\Admin;
 
 use App\Models\Common\SingleImage;
+use App\Models\Admin\Products\Product;
 use Illuminate\Database\Eloquent\Model;
 
 class SubCategory extends Model
@@ -17,5 +18,10 @@ class SubCategory extends Model
     public function image() 
     {
         return $this->morphOne(SingleImage::class, 'imageable');
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class);
     }
 }

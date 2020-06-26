@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin\Products;
 
+use App\Http\Helper;
+use App\Models\Admin\State;
 use Illuminate\Http\Request;
 use App\Models\Admin\Category;
 use Illuminate\Validation\Rule;
-use App\Models\Admin\ProductSize;
-use App\Models\Admin\ProductColor;
 use App\Http\Controllers\Controller;
-use App\Http\Helper;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Admin\Products\ProductSize;
+use App\Models\Admin\Products\ProductColor;
 
 class ProductTypeController extends Controller
 {
@@ -179,6 +180,68 @@ class ProductTypeController extends Controller
                 return response()->json([
                     'success' => true,
                     'msg' => 'color Deleted successfully'
+                ], 200);
+            }
+        }
+    }
+
+    public function state(Request $request)
+    {
+        if($request->isMethod('get') && $request->ajax()) {
+            if(isset($request->state_id) && $request->state_id) {
+                $state = State::where('id', $request->state_id)->first();
+                return response()->json($state);
+            }
+            // Return All state
+            $state = State::latest()->get();
+            return response()->json($state);
+        } else if($request->isMethod('get')) {
+            return view('admin.pages.products.states');
+        }else if($request->isMethod('post')) {
+            try {
+                if(isset($request->state_id)) {
+                    $rules = [
+                        'state' => ['required',
+                                        Rule::unique('states')->ignore($request->state_id),
+                                    ]
+                    ];
+                } else {
+                    $rules = [
+                        'state' => 'required|unique:states'
+                    ];
+                }
+                $validator = Validator::make($request->all(), $rules);
+                if($validator->fails()) {
+                    return response()->json(['errors' => $validator->getMessageBag()], 400);
+                }
+                if(isset($request->state_id)) {
+                    State::where('id', $request->state_id)->update([
+                        'state' => $request->state
+                    ]);
+
+                    return response()->json([
+                        'success' => true,
+                        'msg' => 'State Updated successfully'
+                    ], 200);
+                }
+                State::create([
+                    'state' => $request->state
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'msg' => 'State Added successfully'
+                ], 201);
+
+            } catch(\Exception $e) {
+                return response()->json(['Error' => $e->getMessage()]);
+            }
+        } else if($request->isMethod('delete')) {
+            if(isset($request->state_id)) {
+                State::where('id', $request->state_id)->delete();
+                return response()->json([
+                    'success' => true,
+                    'msg' => 'State Deleted successfully'
                 ], 200);
             }
         }

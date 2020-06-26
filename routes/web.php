@@ -38,10 +38,10 @@ Route::get('essentials', 'Frontend\ProductCategoryController@essentials');
 Route::get('luxury-brands', 'Frontend\ProductCategoryController@luxuryBrands');
 
 
-Route::prefix('admin')->group(function() {
-	Route::get('/', 'AdminController@admin');
-	Route::get('/login', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');
-	Route::post('/login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
+Route::prefix('/')->group(function() {
+	Route::get('/admin', 'AdminController@admin');
+	Route::get('admin-login', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');
+	Route::post('admin-login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
 });
 
 Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
@@ -66,5 +66,6 @@ Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
         ->name('products.size');
     Route::any('products-color', 'Admin\Products\ProductTypeController@productColor')
         ->name('products.color');
+    Route::any('state', 'Admin\Products\ProductTypeController@state')->name('products.state');
 });
 

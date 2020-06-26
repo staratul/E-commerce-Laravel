@@ -7,34 +7,31 @@
             <div id="loader"></div>
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0 text-dark">Color</h1>
-            </div><!-- /.col -->
+              <h1 class="m-0 text-dark">Manage State</h1>
+            </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="{{ route("home") }}">Dashboard</a></li>
-                <li class="breadcrumb-item active">Color</li>
+                <li class="breadcrumb-item active">Manage State</li>
               </ol>
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+            </div>
+          </div>
+        </div>
       </div>
-      <!-- /.content-header -->
 
       <!-- Main content -->
       <div class="content">
         <div class="container-fluid">
           <div class="row">
-            <button type="button" onclick="openModal()" class="btn btn-light ml-2 py-2" data-toggle="modal" data-target="#color_modal"><i class="fas fa-plus mr-1"></i>Add</button>
+            <button type="button" onclick="openModal()" class="btn btn-light ml-2 py-2" data-toggle="modal" data-target="#state_modal"><i class="fas fa-plus mr-1"></i>Add</button>
             <div class="col-md-12 my-3">
                 <div id="jsGrid"></div>
             </div>
           </div>
-          <!-- /.row -->
-        </div><!-- /.container-fluid -->
+        </div>
       </div>
-      <!-- /.content -->
 
-    @include('admin.modals.color_modal')
+    @include('admin.modals.state_modal')
 
 @endsection
 
@@ -53,18 +50,17 @@
             autoload: true,
             pageSize: 10,
             pageButtonCount: 5,
-            deleteConfirm: "Do you really want to delete color?",
+            deleteConfirm: "Do you really want to delete state?",
             controller: {
                 loadData: function(filter) {
                     var d = $.Deferred();
                     $.ajax({
-                        url: "{{ route('products.color') }}",
+                        url: "{{ route('products.state') }}",
                         method: "GET",
                         data: filter
                     }).done(function(result) {
                         result = $.grep(result, function(item) {
-                            return (!filter.color || item.color.indexOf(filter.color) > -1)
-                                && (!filter.status || item.status.indexOf(filter.status) > -1)
+                            return (!filter.state || item.state.indexOf(filter.state) > -1)
                         });
                         d.resolve(result);
                     });
@@ -72,29 +68,10 @@
                 },
             },
             fields: [
-                { name: "color", type: "text", title: "Color", width: 100},
-                { name: "code", type: "text", title: "Code", width: 100,
-                    itemTemplate: function(item, value) {
-                        let color = `<i style="color:${value.code}" class="fas fa-circle"></i>
-                                        <span class="ml-2">${value.code}</span>`;
-
-                        return color;
-                    }
-                },
-                { name: "status", type: "text", width: 50, title: "Status", align: "center",
-                    itemTemplate: function(item, value) {
-                        let button = '';
-                        if(value.status == 0) {
-                            button = `<button type="button" onclick="updateStatus(${value.id},${value.status})" class="btn btn-secondary text-white"><i class="fas fa-toggle-off"></i></button>`;
-                        }else if(value.status == 1) {
-                            button = `<button type="button"  onclick="updateStatus(${value.id},${value.status})" class="btn btn-success"><i class="fas fa-toggle-on"></i></button>`;
-                        }
-                        return button;
-                    }
-                },
+                { name: "state", type: "text", title: "state", width: 100},
                 { type: "control", width: 80, editButton: false, deleteButton: false,
                     itemTemplate: function(item, value) {
-                        return `<button type="button"  onclick="editcolor(${value.id})" class="btn btn-info text-white"><i class="fas fa-pen"></i></button><button type="button"  onclick="deletecolor(${value.id})" class="btn btn-danger ml-2"><i class="fas fa-trash"></i></button>`
+                        return `<button type="button"  onclick="editstate(${value.id})" class="btn btn-info text-white"><i class="fas fa-pen"></i></button><button type="button"  onclick="deletestate(${value.id})" class="btn btn-danger ml-2"><i class="fas fa-trash"></i></button>`
                     }
                 }
             ],
@@ -111,31 +88,31 @@
             }, 1);
         });
 
-        $("#color_form").validate();
-        storecolor = () => {
+        $("#state_form").validate();
+        storestate = () => {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            $("#color_form_submit").attr("disabled", "disabled");
+            $("#state_form_submit").attr("disabled", "disabled");
             $("#loader").css("display", "block");
             // Submit Form data using ajax
             $.ajax({
-                url: "{{ route('products.color') }}",
+                url: "{{ route('products.state') }}",
                 method: "POST",
-                data: $("#color_form").serialize(),
+                data: $("#state_form").serialize(),
                 success: function(response) {
                     toastr.success(response.msg);
                     $("#jsGrid").jsGrid({
                         autoload: true
                     });
                     $("#loader").css("display", "none")
-                    $("#color_form").trigger("reset");
-                    $("#color_modal").modal("hide");
-                    $("#color_id").val(undefined);
-                    $("#modal_title").text("Add Color");
-                    $("#color_form_submit").removeAttr("disabled")
+                    $("#state_form").trigger("reset");
+                    $("#state_modal").modal("hide");
+                    $("#state_id").val(undefined);
+                    $("#modal_title").text("Add State");
+                    $("#state_form_submit").removeAttr("disabled")
                 },
                 error: function(reject) {
                     $.each(reject.responseJSON.errors, function (key, item)
@@ -143,25 +120,25 @@
                         toastr.error(item);
                     });
                     $("#loader").css("display", "none")
-                    $("#color_form_submit").removeAttr("disabled")
+                    $("#state_form_submit").removeAttr("disabled")
                 }
             });
         }
 
-        $("#color_form").submit(function(e) {
+        $("#state_form").submit(function(e) {
             e.preventDefault();
-            if($("#color_form").valid()) {
+            if($("#state_form").valid()) {
                 e.preventDefault();
-                storecolor();
+                storestate();
             }
         });
 
         updateStatus = (id, status) => {
             $("#loader").css("display", "block")
             $.ajax({
-                url: "{{ route('products.color') }}",
+                url: "{{ route('products.state') }}",
                 method: "GET",
-                data: {color_id: id, status: status},
+                data: {state_id: id, status: status},
                 success: function(response) {
                     toastr.success(response.msg);
                     $("#jsGrid").jsGrid({
@@ -176,19 +153,18 @@
             })
         }
 
-        editcolor = (id) => {
+        editstate = (id) => {
             $.ajax({
-                url: "{{ route('products.color') }}",
+                url: "{{ route('products.state') }}",
                 method: "GET",
-                data: {color_id: id},
+                data: {state_id: id},
                 success: function(response) {
-                    let color;
-                    $("#color_form").trigger("reset");
-                    $("#color_id").val(response.id);
-                    $("#color").val(response.color);
-                    $("#code").val(response.code);
-                    $("#modal_title").text("Update Color");
-                    $("#color_modal").modal("show");
+                    let state;
+                    $("#state_form").trigger("reset");
+                    $("#state_id").val(response.id);
+                    $("#state").val(response.state);
+                    $("#modal_title").text("Update State");
+                    $("#state_modal").modal("show");
                 },
                 error: function(reject) {
                     console.log(reject);
@@ -196,7 +172,7 @@
             });
         }
 
-        deletecolor = (id) => {
+        deletestate = (id) => {
             if(confirm("Are you sure you want to delete this item ?")) {
                 $.ajaxSetup({
                     headers: {
@@ -205,9 +181,9 @@
                 });
                 $("#loader").css("display", "block")
                 $.ajax({
-                    url: "{{ route('products.color') }}",
+                    url: "{{ route('products.state') }}",
                     method: "DELETE",
-                    data: {color_id: id},
+                    data: {state_id: id},
                     success: function(response) {
                         toastr.success(response.msg);
                         $("#jsGrid").jsGrid({
@@ -226,8 +202,8 @@
         }
 
         openModal = () => {
-            $("#modal_title").text("Add Color");
-            $("#color_form").trigger("reset");
+            $("#modal_title").text("Add state");
+            $("#state_form").trigger("reset");
         }
     });
 </script>
