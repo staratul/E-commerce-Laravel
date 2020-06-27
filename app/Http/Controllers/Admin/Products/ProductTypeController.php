@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Admin\Category;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Products\Brand;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\Products\ProductSize;
 use App\Models\Admin\Products\ProductColor;
@@ -242,6 +243,68 @@ class ProductTypeController extends Controller
                 return response()->json([
                     'success' => true,
                     'msg' => 'State Deleted successfully'
+                ], 200);
+            }
+        }
+    }
+
+    public function brand(Request $request)
+    {
+        if($request->isMethod('get') && $request->ajax()) {
+            if(isset($request->brand_id) && $request->brand_id) {
+                $brand = Brand::where('id', $request->brand_id)->first();
+                return response()->json($brand);
+            }
+            // Return All brand
+            $brand = Brand::latest()->get();
+            return response()->json($brand);
+        } else if($request->isMethod('get')) {
+            return view('admin.pages.products.brands');
+        }else if($request->isMethod('post')) {
+            try {
+                if(isset($request->brand_id)) {
+                    $rules = [
+                        'brand' => ['required',
+                                        Rule::unique('brands')->ignore($request->brand_id),
+                                    ]
+                    ];
+                } else {
+                    $rules = [
+                        'brand' => 'required|unique:brands'
+                    ];
+                }
+                $validator = Validator::make($request->all(), $rules);
+                if($validator->fails()) {
+                    return response()->json(['errors' => $validator->getMessageBag()], 400);
+                }
+                if(isset($request->brand_id)) {
+                    Brand::where('id', $request->brand_id)->update([
+                        'brand' => $request->brand
+                    ]);
+
+                    return response()->json([
+                        'success' => true,
+                        'msg' => 'Brand Updated successfully'
+                    ], 200);
+                }
+                Brand::create([
+                    'brand' => $request->brand
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'msg' => 'Brand Added successfully'
+                ], 201);
+
+            } catch(\Exception $e) {
+                return response()->json(['Error' => $e->getMessage()]);
+            }
+        } else if($request->isMethod('delete')) {
+            if(isset($request->brand_id)) {
+                Brand::where('id', $request->brand_id)->delete();
+                return response()->json([
+                    'success' => true,
+                    'msg' => 'Brand Deleted successfully'
                 ], 200);
             }
         }

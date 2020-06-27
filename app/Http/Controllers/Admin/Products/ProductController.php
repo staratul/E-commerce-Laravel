@@ -8,6 +8,7 @@ use App\Models\Admin\Category;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Products\Product;
 use App\Http\Requests\ProductStoreRequest;
+use App\Models\Admin\Products\Brand;
 use Illuminate\Support\Facades\Session;
 use App\Models\Admin\Products\ProductColor;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
@@ -30,11 +31,13 @@ class ProductController extends Controller
                 ->get();
         $states = State::orderBy('state')->get();
         $colors = ProductColor::orderBy('color')->get();
+        $brands = Brand::orderBy('brand')->get();
 
         return [
                 "categories" => $categories,
                 "states" => $states,
-                "colors" => $colors
+                "colors" => $colors,
+                "brands" => $brands
             ];
     }
 
@@ -58,7 +61,8 @@ class ProductController extends Controller
     {
         $array = $this->addProdcutData();
         $categories = $array['categories']; $states = $array['states']; $colors = $array['colors'];
-        return view('admin.pages.products.add_products', compact('categories', 'states', 'colors'));
+        $brands = $array['brands'];
+        return view('admin.pages.products.add_products', compact('categories', 'states', 'colors', 'brands'));
     }
 
     /**
@@ -101,7 +105,8 @@ class ProductController extends Controller
         $product->product_size_stocks = $product->product_size_stocks;
         $array = $this->addProdcutData();
         $categories = $array['categories']; $states = $array['states']; $colors = $array['colors'];
-        return view('admin.pages.products.add_products', compact('categories','states','colors','product'));
+        $brands = $array['brands'];
+        return view('admin.pages.products.add_products', compact('categories','states','colors','product','brands'));
     }
 
     /**

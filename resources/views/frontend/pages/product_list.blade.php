@@ -21,38 +21,40 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-8 order-2 order-lg-1 produts-sidebar-filter">
-                    <div class="filter-widget">
-                        <h4 class="fw-title">Categories</h4>
-                        <ul class="filter-catagories">
-                            @foreach ($categories as $category)
-                            <li class="mt-2">
-                                <a href="{{ url('/'.$category->category_url) }}">{{ $category->category }}</a>
-                            </li>
-                            @endforeach
-                            {{-- <li><a href="#">Men</a></li>
-                            <li><a href="#">Women</a></li>
-                            <li><a href="#">Kids</a></li> --}}
-                        </ul>
-                    </div>
+                    @include('layouts.inc.filter_product')
                 </div>
                 <div class="col-lg-9 order-1 order-lg-2">
                     <div class="product-list">
                         <div class="row">
-                            @if(isset($subCategory) && isset($subCategory->sub_categories) > 0) @foreach ($subCategory->sub_categories as $key => $sub)
+                            @if(isset($products)) @foreach ($products as $product)
                                 <div class="col-lg-4 col-sm-6">
                                     <div class="product-item">
-                                        <div class="pi-pic border">
-                                            <img src="{{ $sub->image->url ?? "" }}" alt="">
+                                        <div class="pi-pic">
+                                            <img src="
+                                            {{ asset ($product->product_image->product_image_url) }}" alt="">
+                                            <div class="sale">Sale</div>
+                                            <div class="icon">
+                                                <i class="icon_heart_alt"></i>
+                                            </div>
                                             <ul>
-                                                <li class="w-100 w-icon active">
-                                                    <a href="{{ route('product.list', [
-                                                        Helper::slug($subCategory->category),
-                                                        $subCategory->id,
-                                                        Helper::slug($sub->sub_category_url),
-                                                        $sub->id
-                                                        ]) }}">{{ $sub->sub_category }}</a>
+                                                <li class="w-icon active"><a href="#"><i class="icon_bag_alt"></i></a></li>
+                                                <li class="quick-view">
+                                                    <a href="{{ route('product.details', [$product->id,Helper::slug($product->sub_title)]) }}">
+                                                        + Quick View
+                                                    </a>
                                                 </li>
+                                                <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
                                             </ul>
+                                        </div>
+                                        <div class="pi-text">
+                                            <div class="catagory-name">{{ $product->sub_category->sub_category ?? '' }}</div>
+                                            <a href="#">
+                                                <h6>{{ $product->sub_title ?? '' }}</h6>
+                                            </a>
+                                            <div class="product-price">
+                                                ₹{{ $product->selling_price }}.00
+                                                <span>₹{{ $product->original_price }}.00</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -63,7 +65,7 @@
                                             <img src="{{ asset('img/not-available.jpg') }}" alt="">
                                             <ul>
                                                 <li class="w-100 w-icon active">
-                                                    <a href="javascript:;">Not Category Available</a>
+                                                    <a href="javascript:;">No Product Available</a>
                                                 </li>
                                             </ul>
                                         </div>

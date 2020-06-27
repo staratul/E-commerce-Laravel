@@ -13,13 +13,13 @@ class ProductCategoryController extends Controller
     public function queryCategories($category) {
         $Subcategories = Category::where('category', $category)->first();
         if($Subcategories) {
-            $Subcategories = $Subcategories->sub_categories;
+            $Subcategories->sub_categories = $Subcategories->sub_categories;
         } else {
             return null;
         }
-        if($Subcategories) {
-            foreach($Subcategories as $key => $categogory) {
-                $Subcategories[$key]->image = $categogory->image;
+        if(isset($Subcategories->sub_categories)) {
+            foreach($Subcategories->sub_categories as $key => $categogory) {
+                $Subcategories->sub_categories[$key]->image = $categogory->image;
             }
         }
         return $Subcategories;
@@ -27,6 +27,7 @@ class ProductCategoryController extends Controller
 
     public function womensClothing() {
         $subCategory = $this->queryCategories("Women’s Clothing");
+        // dd($subCategory);
         return view('frontend.pages.product-categories', compact('subCategory'));
     }
 

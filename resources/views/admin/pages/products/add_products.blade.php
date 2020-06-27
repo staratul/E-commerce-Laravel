@@ -49,7 +49,7 @@
                            <div class="form-group">
                                <input type="hidden" name="product_id" value="">
                               <label>Category</label>
-                              <select class="form-control select2bs4" name="category_id" id="category_id" style="width: 100%;" data-placeholder="Select Category">
+                              <select class="form-control select2bs4 w-100" name="category_id" id="category_id" data-placeholder="Select Category">
                                  @foreach ($categories as $category)
                                     <option value="{{ $category->id }}"
                                         {{ isset($product) && $product->category_id == $category->id ? 'selected' : '' }}
@@ -63,7 +63,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                <label>Tags</label>
-                               <select class="select2bs4" multiple="multiple" name="tags[]" id="tags" data-placeholder="Select Tags" style="width: 100%;" required>
+                               <select class="select2bs4 w-100" multiple="multiple" name="tags[]" id="tags" data-placeholder="Select Tags" required>
                                </select>
                                <span id="tags_error"></span>
                             </div>
@@ -71,15 +71,15 @@
                         <div class="col-md-6">
                            <div class="form-group">
                               <label>Sub Category</label>
-                              <select class="form-control select2bs4" name="sub_category_id" id="sub_category_id" data-placeholder="Select Sub Category" style="width: 100%;" required>
+                              <select class="form-control select2bs4 w-100" name="sub_category_id" id="sub_category_id" data-placeholder="Select Sub Category" required>
                               </select>
                               <span id="sub_category_id_error"></span>
                            </div>
                         </div>
                         <div class="col-md-6">
                            <div class="form-group">
-                              <label>Available Sizes</label>
-                              <select class="select2bs4" multiple="multiple" name="size[]" id="size" data-placeholder="Select Size" style="width: 100%;" required>
+                              <label>Available In Sizes</label>
+                              <select class="select2bs4 w-100" multiple="multiple" name="size[]" id="size" data-placeholder="Select Size" required>
                               </select>
                               <span id="size_error"></span>
                            </div>
@@ -100,8 +100,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                               <label for="color">Available Color</label>
-                               <select class="select2bs4" multiple="multiple" name="colors[]" id="colors" data-placeholder="Select Color" style="width: 100%;" required>
+                               <label for="color">Available In Color</label>
+                               <select class="select2bs4 w-100" multiple="multiple" name="colors[]" id="colors" data-placeholder="Select Color" required>
                                     @foreach ($colors as $color)
                                         <option value="{{ $color->id }}"
                                             @if (isset($product))
@@ -122,7 +122,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                <label for="color">Available In State</label>
-                               <select class="select2bs4" multiple="multiple" name="states[]" id="states" data-placeholder="Select State" style="width: 100%;" required>
+                               <select class="select2bs4 w-100" multiple="multiple" name="states[]" id="states" data-placeholder="Select State" required>
                                     @foreach ($states as $state)
                                         <option value="{{ $state->id }}"
                                             @if (isset($product))
@@ -176,7 +176,36 @@
                         <div class="col-md-4">
                            <div class="form-group">
                               <label for="brand">Brand</label>
-                              <input type="text" class="form-control" name="brand" id="brand" placeholder="Brand" value="{{ isset($product) ? $product->brand : '' }}">
+                              <select name="brand" id="brand" class="select2bs4 w-100" data-placeholder="Brand">
+                                @foreach ($brands as $brand)
+                                    <option value="{{ $brand->id }}"
+                                        {{ isset($product) && $product->brand == $brand->id ? 'selected' : '' }}
+                                        >
+                                        {{ $brand->brand }}
+                                    </option>
+                                @endforeach
+                              </select>
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                               <label for="material">Material</label>
+                               <input type="text" class="form-control" name="material" id="material" placeholder="Material" value="{{ isset($product) ? $product->material : '' }}" required>
+                               <span id="material_error"></span>
+                            </div>
+                         </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label for="product_size">Product Size</label>
+                            <select class="select2bs4 w-100" name="product_size" id="product_size" data-placeholder="Select Size" required>
+                            </select>
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <label for="product_color">Product Color</label>
+                              <select class="select2bs4 w-100" name="product_color" id="product_color" data-placeholder="Select Color" required>
+                                </select>
                            </div>
                         </div>
                         <div class="col-md-6">
@@ -189,7 +218,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                <label for="color">Seller State</label>
-                               <select class="select2bs4" name="seller_state" id="seller_state" data-placeholder="Seller State" style="width: 100%;">
+                               <select class="select2bs4 w-100" name="seller_state" id="seller_state" data-placeholder="Seller State">
                                     @foreach ($states as $state)
                                         <option value="{{ $state->id }}"
                                             {{ isset($product) && $product->seller_state == $state->id ? 'selected' : '' }}
@@ -374,8 +403,10 @@
         });
 
         $("#size").on("change", () => {
-            let sizes=[],html='',value='';
+            let sizes=[],html='',value='',productSizeOption='',productSize,isMatch='';
             $("#stock_in_size_div").html(html);
+            $("#product_size").html(productSizeOption);
+            productSize = "{!! isset($product) ? $product->product_size : '' !!}";
             sizes = $("#size").val();
             if(sizes.length > 0) {
                 sizeStock = {!! isset($product) ? $product->product_size_stocks : 'false' !!};
@@ -396,15 +427,25 @@
                             <input type="number" name="stock_of_size[]" value="${value}" class="form-control stock_of_size" placeholder="Stock"></div></div>`;
                     value = '';
                 }
+                for([i,s] of sizes.entries()) {
+                    if(productSize == s) {
+                        isMatch = 'selected';
+                    }
+                    productSizeOption += `<option ${isMatch} value="${s}">${s}</option>`;
+                    isMatch = '';
+                }
             } else {
                 html = '<h4 class="text-gray">No size selected from the box.</h4>';
             }
+            $("#product_size").append(productSizeOption);
             $("#stock_in_size_div").append(html);
         }).change();
 
         $("#colors").on("change", () => {
-            let colors=[],html='',colorsName=[],names='',value='';
+            let colors=[],html='',colorsName=[],names='',value='',productColorOption='',productColor,isMatch='';
             $("#stock_in_color_div").html(html);
+            $("#product_color").html(productColorOption);
+            productColor = "{!! isset($product) ? $product->product_color : '' !!}";
             colors = $("#colors").val()
             names = $('#colors option:selected').toArray().map(item => item.text).join();
             colorsName = names.split(',');
@@ -427,9 +468,17 @@
                             <input type="number" name="stock_of_color[]" value="${value}" class="form-control stock_of_color" placeholder="Stock"></div></div>`;
                     value = '';
                 }
+                for([i,s] of colorsName.entries()) {
+                    if(productColor == s) {
+                        isMatch = 'selected';
+                    }
+                    productColorOption += `<option ${isMatch} value="${s}">${s}</option>`;
+                    isMatch = '';
+                }
             } else {
                 html = '<h4 class="text-gray">No color selected from the box.</h4>';
             }
+            $("#product_color").append(productColorOption);
             $("#stock_in_color_div").append(html);
         }).change();
 

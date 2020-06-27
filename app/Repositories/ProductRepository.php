@@ -36,7 +36,10 @@ class ProductRepository implements ProductRepositoryInterface
             'pay_on_delivery' => $data['pay_on_delivery'],
             'status' => $data['status'],
             'product_details' => $data['product_details'],
-            'description' => $data['description']
+            'description' => $data['description'],
+            'material' => $data['material'],
+            'product_color' => $data['product_color'],
+            'product_size' => $data['product_size']
         ];
     }
 

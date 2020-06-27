@@ -35,9 +35,9 @@
                     @endguest
                     <div class="lan-selector">
                         <select class="language_drop" name="countries" id="countries" style="width:300px;">
-                            <option value='yt' data-image="img/flag-1.jpg" data-imagecss="flag yt"
+                            <option value='yt' data-image="{{ asset('img/flag-1.jpg') }}" data-imagecss="flag yt"
                                 data-title="English">English</option>
-                            <option value='yu' data-image="img/flag-2.jpg" data-imagecss="flag yu"
+                            <option value='yu' data-image="{{ asset('img/flag-2.jpg') }}" data-imagecss="flag yu"
                                 data-title="Bangladesh">German </option>
                         </select>
                     </div>
@@ -55,8 +55,8 @@
                 <div class="row">
                     <div class="col-lg-2 col-md-2">
                         <div class="logo">
-                            <a href="./index.html">
-                                <img src="img/logo.png" alt="">
+                            <a href="{{ url('/') }}">
+                                <img src="{{ asset('img/logo.png') }}" alt="">
                             </a>
                         </div>
                     </div>
@@ -87,7 +87,7 @@
                                         <table>
                                             <tbody>
                                                 <tr>
-                                                    <td class="si-pic"><img src="img/select-product-1.jpg" alt=""></td>
+                                                    <td class="si-pic"><img src="{{ asset('img/select-product-1.jpg') }}" alt=""></td>
                                                     <td class="si-text">
                                                         <div class="product-selected">
                                                             <p>$60.00 x 1</p>
@@ -99,7 +99,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="si-pic"><img src="img/select-product-2.jpg" alt=""></td>
+                                                    <td class="si-pic"><img src="{{ asset('img/select-product-2.jpg') }}" alt=""></td>
                                                     <td class="si-text">
                                                         <div class="product-selected">
                                                             <p>$60.00 x 1</p>
@@ -138,7 +138,7 @@
                         <ul class="depart-hover">
                             @foreach ($categories as $key => $category)
                                 <li @if($key===0) class="active" @endif>
-                                    <a href="{{ $category->category_url }}">{{ $category->category }}</a>
+                                    <a href="{{ url('/'.$category->category_url) }}">{{ $category->category }}</a>
                                 </li>
                             @endforeach
                             {{-- <li class="active"><a href="#">Women’s Clothing</a></li>

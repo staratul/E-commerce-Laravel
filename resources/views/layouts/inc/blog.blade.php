@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-lg-4 col-md-6">
                 <div class="single-latest-blog">
-                    <img src="img/latest-1.jpg" alt="">
+                    <img src="{{ asset('img/latest-1.jpg') }}" alt="">
                     <div class="latest-text">
                         <div class="tag-list">
                             <div class="tag-item">
@@ -32,7 +32,7 @@
             </div>
             <div class="col-lg-4 col-md-6">
                 <div class="single-latest-blog">
-                    <img src="img/latest-2.jpg" alt="">
+                    <img src="{{ asset('img/latest-2.jpg') }}" alt="">
                     <div class="latest-text">
                         <div class="tag-list">
                             <div class="tag-item">
@@ -53,7 +53,7 @@
             </div>
             <div class="col-lg-4 col-md-6">
                 <div class="single-latest-blog">
-                    <img src="img/latest-3.jpg" alt="">
+                    <img src="{{ asset('img/latest-3.jpg') }}" alt="">
                     <div class="latest-text">
                         <div class="tag-list">
                             <div class="tag-item">
@@ -78,7 +78,7 @@
                 <div class="col-lg-4">
                     <div class="single-benefit">
                         <div class="sb-icon">
-                            <img src="img/icon-1.png" alt="">
+                            <img src="{{ asset('img/icon-1.png') }}" alt="">
                         </div>
                         <div class="sb-text">
                             <h6>Free Shipping</h6>
@@ -89,7 +89,7 @@
                 <div class="col-lg-4">
                     <div class="single-benefit">
                         <div class="sb-icon">
-                            <img src="img/icon-2.png" alt="">
+                            <img src="{{ asset('img/icon-2.png') }}" alt="">
                         </div>
                         <div class="sb-text">
                             <h6>Delivery On Time</h6>
@@ -100,7 +100,7 @@
                 <div class="col-lg-4">
                     <div class="single-benefit">
                         <div class="sb-icon">
-                            <img src="img/icon-1.png" alt="">
+                            <img src="{{ asset('img/icon-1.png') }}" alt="">
                         </div>
                         <div class="sb-text">
                             <h6>Secure Payment</h6>

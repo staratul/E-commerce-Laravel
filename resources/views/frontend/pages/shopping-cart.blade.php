@@ -36,7 +36,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="cart-pic first-row"><img src="img/cart-page/product-1.jpg" alt=""></td>
+                                    <td class="cart-pic first-row"><img src="{{ asset('img/cart-page/product-1.jpg') }}" alt=""></td>
                                     <td class="cart-title first-row">
                                         <h5>Pure Pineapple</h5>
                                     </td>
@@ -52,7 +52,7 @@
                                     <td class="close-td first-row"><i class="ti-close"></i></td>
                                 </tr>
                                 <tr>
-                                    <td class="cart-pic"><img src="img/cart-page/product-2.jpg" alt=""></td>
+                                    <td class="cart-pic"><img src="{{ asset('img/cart-page/product-2.jpg') }}" alt=""></td>
                                     <td class="cart-title">
                                         <h5>American lobster</h5>
                                     </td>
@@ -68,7 +68,7 @@
                                     <td class="close-td"><i class="ti-close"></i></td>
                                 </tr>
                                 <tr>
-                                    <td class="cart-pic"><img src="img/cart-page/product-3.jpg" alt=""></td>
+                                    <td class="cart-pic"><img src="{{ asset('img/cart-page/product-3.jpg') }}" alt=""></td>
                                     <td class="cart-title">
                                         <h5>Guangzhou sweater</h5>
                                     </td>

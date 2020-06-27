@@ -204,6 +204,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <p>State</p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a href="{{ route('products.brand') }}" class="nav-link @if(Route::currentRouteName() === 'products.brand') active @endif">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Brand</p>
+                  </a>
+                </li>
               </ul>
             </li>
           </ul>

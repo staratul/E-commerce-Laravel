@@ -36,7 +36,10 @@ class Product extends Model
         'pay_on_delivery',
         'status',
         'product_details',
-        'description'
+        'description',
+        'material',
+        'product_color',
+        'product_size'
     ];
 
     public function getSellingPriceAttribute($price)

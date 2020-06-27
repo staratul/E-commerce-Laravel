@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use DateTime;
+use Illuminate\Support\Str;
 
 class Helper
 {
@@ -21,5 +22,10 @@ class Helper
         $d = date(DATE_RFC2822, strtotime($strip));
         $variable = substr($d, 0, strpos($d, ' 00:00:00'));
         return $variable;
+    }
+
+    static function slug($text)
+    {
+        return Str::slug($text);
     }
 }

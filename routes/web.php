@@ -25,17 +25,23 @@ Route::get('/blog-details', 'Frontend\PageController@blogDetails');
 Route::get('/blog', 'Frontend\PageController@blog');
 Route::get('/checkout', 'Frontend\PageController@checkOut');
 Route::get('/faq', 'Frontend\PageController@faq');
-Route::get('/product', 'Frontend\PageController@product');
+
+// Product
+Route::get('/product-details/{product}/{slug}', 'Frontend\PageController@productDetails')
+            ->name('product.details');
+Route::get('/product-list/{category}/{category_id}/{subCategory}/{subCategory_id}',              'Frontend\PageController@productList')->name('product.list');
+
 Route::get('/shop', 'Frontend\PageController@shop');
 Route::get('/shopping-cart', 'Frontend\PageController@shoppingCart');
+
 // Product Control
-Route::get('womens-clothing', 'Frontend\ProductCategoryController@womensClothing');
-Route::get('mens-clothing', 'Frontend\ProductCategoryController@mensClothing');
-Route::get('kids-clothing', 'Frontend\ProductCategoryController@kidsClothing');
-Route::get('home-living', 'Frontend\ProductCategoryController@homeLiving');
-Route::get('accessories', 'Frontend\ProductCategoryController@accessories');
-Route::get('essentials', 'Frontend\ProductCategoryController@essentials');
-Route::get('luxury-brands', 'Frontend\ProductCategoryController@luxuryBrands');
+Route::get('/womens-clothing', 'Frontend\ProductCategoryController@womensClothing');
+Route::get('/mens-clothing', 'Frontend\ProductCategoryController@mensClothing');
+Route::get('/kids-clothing', 'Frontend\ProductCategoryController@kidsClothing');
+Route::get('/home-living', 'Frontend\ProductCategoryController@homeLiving');
+Route::get('/accessories', 'Frontend\ProductCategoryController@accessories');
+Route::get('/essentials', 'Frontend\ProductCategoryController@essentials');
+Route::get('/luxury-brands', 'Frontend\ProductCategoryController@luxuryBrands');
 
 
 Route::prefix('/')->group(function() {
@@ -67,5 +73,6 @@ Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
     Route::any('products-color', 'Admin\Products\ProductTypeController@productColor')
         ->name('products.color');
     Route::any('state', 'Admin\Products\ProductTypeController@state')->name('products.state');
+    Route::any('brand', 'Admin\Products\ProductTypeController@brand')->name('products.brand');
 });
 
