@@ -50,67 +50,77 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <div class="product-details">
-                                <div class="pd-title">
-                                    <span>{{ $product->title ?? '' }}</span>
-                                    <h4 class="text-gray">{{ $product->sub_title ?? '' }}</h4>
-                                    <a href="#" class="heart-icon"><i class="icon_heart_alt"></i></a>
-                                </div>
-                                <div class="pd-rating">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star-o"></i>
-                                    <span>(5)</span>
-                                </div>
-                                <div class="pd-desc">
-                                    <h4>₹{{ $product->selling_price ?? '' }}.00 
-                                    <span>₹{{ $product->original_price }}</span>
-                                    <span style="font-size: 20px !important;color: black;text-decoration: none;">({{ $product->discount }}% Off)</span>
-                                    </h4>
-                                </div>
-                                <div class="pd-color">
-                                    <h6>Color</h6>
-                                    <div class="pd-size-choose">
-                                        @foreach ($product->productColors as $color)
-                                            <div class="sc-item">
-                                                <input type="radio" id="sm-size">
-                                                <label for="sm-size">
-                                                    <i class="fa fa-circle" style="color: {{ $color->code }};font-size:23px" aria-hidden="true"></i>
-                                                </label>
-                                            </div>
-                                        @endforeach
+                            <form id="addcartform">
+                                <input type="hidden" name="product_id" value="{{ $product->id ?? '' }}">
+                                <div class="product-details">
+                                    <div class="pd-title">
+                                        <span>{{ $product->title ?? '' }}</span>
+                                        <h4 class="text-gray">{{ $product->sub_title ?? '' }}</h4>
+                                        <a href="#" class="heart-icon"><i class="icon_heart_alt"></i></a>
                                     </div>
-                                </div>
-                                <div class="pd-size-choose">
-                                    @foreach (Helper::explode($product->size) as $size)
-                                        <div class="sc-item">
-                                            <input type="radio" id="sm-size">
-                                            <label for="sm-size">{{ $size }}</label>
+                                    <div class="pd-rating">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <span>(5)</span>
+                                    </div>
+                                    <div class="pd-desc">
+                                        <h4>₹{{ $product->selling_price ?? '' }}.00
+                                        <span>₹{{ $product->original_price }}</span>
+                                        <span style="font-size: 20px !important;color: black;text-decoration: none;">({{ $product->discount }}% Off)</span>
+                                        </h4>
+                                    </div>
+                                    <div class="pd-color">
+                                        <h6 class="mt-10">Color</h6>
+                                        <div class="pd-size-choose">
+                                            @foreach ($product->productColors as $k => $color)
+                                                <div class="cc-item">
+                                                    <input type="radio" name="color" id="sm-color-{{ $k }}" value="{{ $color->code }}" {{ $color->color == $product->product_color ? 'checked' : '' }}>
+                                                    <label for="sm-color-{{ $k }}" class="{{ $color->color == $product->product_color ? 'active' : '' }}">
+                                                        <i class="fa fa-circle" style="color: {{ $color->code }};font-size:23px" aria-hidden="true"></i>
+                                                    </label>
+                                                </div>
+                                            @endforeach
                                         </div>
-                                    @endforeach
-                                </div>
-                                <div class="quantity">
-                                    <div class="pro-qty">
-                                        <input type="text" value="1">
                                     </div>
-                                    <a href="#" class="primary-btn pd-cart">Add To Cart</a>
-                                </div>
-                                <ul class="pd-tags">
-                                    <li><span>CATEGORIES</span>: {{ $product->category->category ?? '' }}, {{ $product->sub_category->sub_category ?? '' }}</li>
-                                    <li><span>TAGS</span>: {{ $product->tags ?? '' }}</li>
-                                    <li><span>MATERIAL</span>: {{ $product->material ?? '' }}</li>
-                                </ul>
-                                <div class="pd-share">
-                                    <div class="p-code">Sku : 00012</div>
-                                    <div class="pd-social">
-                                        <a href="#"><i class="ti-facebook"></i></a>
-                                        <a href="#"><i class="ti-twitter-alt"></i></a>
-                                        <a href="#"><i class="ti-linkedin"></i></a>
+                                    <div class="pd-color">
+                                        <h6 class="mt-10">Size</h6>
+                                        <div class="pd-size-choose">
+                                            @foreach (Helper::explode($product->size) as $k => $size)
+                                                <div class="sc-item">
+                                                    <input type="radio" name="size" id="sm-size-{{ $k }}" value="{{ $size }}" {{ $size == $product->product_size ? 'checked' : '' }}>
+                                                    <label for="sm-size-{{ $k }}" class="{{ $size == $product->product_size ? 'active' : '' }}">{{ $size }}</label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    <div class="quantity">
+                                        <div class="pro-qty">
+                                            <span class="dec qtybtn">-</span>
+                                            <input type="text" name="quantity" value="1">
+                                            <span class="inc qtybtn">+</span>
+                                        </div>
+                                        <button type="submit" id="addToCart" class="primary-btn pd-cart" style="border: none;">
+                                            Add To Cart
+                                        </button>
+                                    </div>
+                                    <ul class="pd-tags">
+                                        <li><span>CATEGORIES</span>: {{ $product->category->category ?? '' }}, {{ $product->sub_category->sub_category ?? '' }}</li>
+                                        <li><span>TAGS</span>: {{ $product->tags ?? '' }}</li>
+                                        <li><span>MATERIAL</span>: {{ $product->material ?? '' }}</li>
+                                    </ul>
+                                    <div class="pd-share">
+                                        <div class="p-code">Sku : 00012</div>
+                                        <div class="pd-social">
+                                            <a href="#"><i class="ti-facebook"></i></a>
+                                            <a href="#"><i class="ti-twitter-alt"></i></a>
+                                            <a href="#"><i class="ti-linkedin"></i></a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                     <div class="product-tab">
@@ -127,6 +137,7 @@
                                 </li>
                             </ul>
                         </div>
+
                         <div class="tab-item-content">
                             <div class="tab-content">
                                 <div class="tab-pane fade-in active" id="tab-1" role="tabpanel">
@@ -323,106 +334,59 @@
                     </div>
                     @endforeach
                 @endif
-                {{-- <div class="col-lg-3 col-sm-6">
-                    <div class="product-item">
-                        <div class="pi-pic">
-                            <img src="{{ asset('img/products/women-1.jpg') }}" alt="">
-                            <div class="sale">Sale</div>
-                            <div class="icon">
-                                <i class="icon_heart_alt"></i>
-                            </div>
-                            <ul>
-                                <li class="w-icon active"><a href="#"><i class="icon_bag_alt"></i></a></li>
-                                <li class="quick-view"><a href="#">+ Quick View</a></li>
-                                <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="pi-text">
-                            <div class="catagory-name">Coat</div>
-                            <a href="#">
-                                <h5>Pure Pineapple</h5>
-                            </a>
-                            <div class="product-price">
-                                $14.00
-                                <span>$35.00</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="product-item">
-                        <div class="pi-pic">
-                            <img src="{{ asset('img/products/women-2.jpg') }}" alt="">
-                            <div class="icon">
-                                <i class="icon_heart_alt"></i>
-                            </div>
-                            <ul>
-                                <li class="w-icon active"><a href="#"><i class="icon_bag_alt"></i></a></li>
-                                <li class="quick-view"><a href="#">+ Quick View</a></li>
-                                <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="pi-text">
-                            <div class="catagory-name">Shoes</div>
-                            <a href="#">
-                                <h5>Guangzhou sweater</h5>
-                            </a>
-                            <div class="product-price">
-                                $13.00
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="product-item">
-                        <div class="pi-pic">
-                            <img src="{{ asset('img/products/women-3.jpg') }}" alt="">
-                            <div class="icon">
-                                <i class="icon_heart_alt"></i>
-                            </div>
-                            <ul>
-                                <li class="w-icon active"><a href="#"><i class="icon_bag_alt"></i></a></li>
-                                <li class="quick-view"><a href="#">+ Quick View</a></li>
-                                <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="pi-text">
-                            <div class="catagory-name">Towel</div>
-                            <a href="#">
-                                <h5>Pure Pineapple</h5>
-                            </a>
-                            <div class="product-price">
-                                $34.00
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="product-item">
-                        <div class="pi-pic">
-                            <img src="{{ asset('img/products/women-4.jpg') }}" alt="">
-                            <div class="icon">
-                                <i class="icon_heart_alt"></i>
-                            </div>
-                            <ul>
-                                <li class="w-icon active"><a href="#"><i class="icon_bag_alt"></i></a></li>
-                                <li class="quick-view"><a href="#">+ Quick View</a></li>
-                                <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="pi-text">
-                            <div class="catagory-name">Towel</div>
-                            <a href="#">
-                                <h5>Converse Shoes</h5>
-                            </a>
-                            <div class="product-price">
-                                $34.00
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
             </div>
         </div>
     </div>
     <!-- Related Products Section End -->
 @endsection
+
+@push('js')
+<script>
+    $(() => {
+        $("#addcartform").on("submit", (e) => {
+            e.preventDefault();
+            // Submit Form data using ajax
+            $.ajax({
+                url: "{{ route('addcart') }}",
+                method: "POST",
+                data: $("#addcartform").serialize(),
+                headers: {"X-CSRF-TOKEN" : $('meta[name="csrf-token"]').attr('content')},
+                success: function(response) {
+                    let url;
+                    if(response) {
+                        url = '{{ route("cart.notifications", ":id") }}';
+                        url = url.replace(':id', response.cart.id);
+                        $.ajax({
+                            url,
+                            method: "GET",
+                            success: function(res) {
+                                let totalPrice=0, count=0;
+                                for(data in res.items) {
+                                    totalPrice += res.items[data].price;
+                                    count++;
+                                }
+                                $("#select-total-price").text(totalPrice);
+                                $(".cart-price").text(totalPrice);
+                                $("#icon_bag_total").text(count);
+                            },
+                            error: function(reject) {
+                                console.log(reject);
+                            }
+                        });
+                    }
+                    if(response) {
+                        toastr.success(response.success);
+                    }
+
+                },
+                error: function(reject) {
+                    $.each(reject.responseJSON.errors, function (key, item)
+                    {
+                        toastr.error(item);
+                    });
+                }
+            });
+        })
+    })
+</script>
+@endpush

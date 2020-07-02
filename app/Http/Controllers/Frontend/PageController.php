@@ -39,11 +39,6 @@ class PageController extends Controller
         return view('frontend.pages.blog');
     }
 
-    public function checkOut()
-    {
-        return view('frontend.pages.check-out');
-    }
-
     public function faq()
     {
         return view('frontend.pages.faq');
@@ -58,6 +53,7 @@ class PageController extends Controller
         $product->product_preview_images = $product->product_preview_images;
         $colors = ProductColor::whereIn('id', $colors)->get();
         $product->productColors = $colors;
+        // dd($product);
         $relatedProducts = Product::where('category_id', $product->category_id)
                                 ->where('id', '!=', $product->id)
                                 ->with('sub_category')->with('product_image')->get();

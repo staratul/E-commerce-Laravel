@@ -23,7 +23,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/contact', 'Frontend\PageController@contact');
 Route::get('/blog-details', 'Frontend\PageController@blogDetails');
 Route::get('/blog', 'Frontend\PageController@blog');
-Route::get('/checkout', 'Frontend\PageController@checkOut');
 Route::get('/faq', 'Frontend\PageController@faq');
 
 // Product
@@ -42,6 +41,22 @@ Route::get('/home-living', 'Frontend\ProductCategoryController@homeLiving');
 Route::get('/accessories', 'Frontend\ProductCategoryController@accessories');
 Route::get('/essentials', 'Frontend\ProductCategoryController@essentials');
 Route::get('/luxury-brands', 'Frontend\ProductCategoryController@luxuryBrands');
+
+// Shopping Cart
+Route::any('add-cart', 'Frontend\Shoppings\ShoppingController@addToCart')
+        ->name('addcart');
+Route::any('add-cart-notifications/{cart}', 'Frontend\Shoppings\ShoppingController@cartNotifications')
+        ->name('cart.notifications');
+Route::post('/remove-cart-item', 'Frontend\Shoppings\ShoppingController@removeCartItem')
+        ->name('remove.cartitem');
+Route::post('/decrease-cart-qty', 'Frontend\Shoppings\ShoppingController@decreaseCartQty')
+        ->name('decrease.cartquantity');
+Route::post('/increase-cart-qty', 'Frontend\Shoppings\ShoppingController@increaseCartQty')
+        ->name('increase.cartquantity');
+
+// Checkout
+Route::get('/checkout', 'Frontend\Shoppings\ShoppingController@cartCheckOut')
+        ->name('cart.checkout');
 
 
 Route::prefix('/')->group(function() {
