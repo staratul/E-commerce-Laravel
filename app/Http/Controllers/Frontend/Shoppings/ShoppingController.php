@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers\Frontend\Shoppings;
 
+use App\User;
+use App\UserDetail;
 use Illuminate\Http\Request;
 use App\Models\Frontend\Cart;
 use App\Events\AddToCartEvent;
+use Nexmo\Laravel\Facade\Nexmo;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Helper;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Frontend\ShoppingCart;
 use App\Models\Admin\Products\Product;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\UserDetailStoreRequest;
+use App\Models\Frontend\Order;
 
 class ShoppingController extends Controller
 {
@@ -58,12 +65,11 @@ class ShoppingController extends Controller
     public function cartNotifications(Request $request, Cart $cart)
     {
             if($request->ajax() && $request->isMethod('get')) {
-                // Session::flush();
                 $productId = $cart->unreadNotifications[0]->data["cart"]["product_id"];
                 $product = Product::with('product_image')
                                     ->where('id', $productId)
                                     ->orderBy('sub_title')
-                                    ->first(['id', 'sub_title', 'selling_price']);
+                                    ->first(['id','sub_title','selling_price']);
                 $product->cart = $cart;
                 $oldCart = Session::has('shoppingcart') ? Session::get('shoppingcart') : null;
                 $obj = new ShoppingCart($oldCart);
@@ -76,7 +82,8 @@ class ShoppingController extends Controller
     public function removeCartItem(Request $request)
     {
         if($request->ajax() && $request->isMethod('post')) {
-            Cart::where('product_id', $request->id)->delete();
+            Cart::where('id', $request->cart_id)->delete();
+            DB::table('notifications')->where('notifiable_id', $request->cart_id)->delete();
             $oldCart = Session::has('shoppingcart') ? Session::get('shoppingcart') : null;
             $obj = new ShoppingCart($oldCart);
             $obj->removeItemFromCart($request->id);
@@ -111,5 +118,60 @@ class ShoppingController extends Controller
         } else {
             return back();
         }
+    }
+
+    public function placeOrder(Request $request)
+    {
+        $products = Session::has('shoppingcart') ? Session::get('shoppingcart') : null;
+
+        if(!isset($request->is_register)) {
+            $request->is_register = '0';
+        }
+
+        $userDetail = UserDetail::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'address1' => $request->address1,
+            'address2' => $request->address2,
+            'pincode' => $request->pincode,
+            'city' => $request->city,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'is_register' => $request->is_register
+        ]);
+
+        if($request->is_register == "1") {
+            $user = User::where('email', $userDetail->email)->first();
+            if(!isset($user)) {
+                $user = User::create([
+                    'name' => $userDetail->first_name.' '.$userDetail->last_name,
+                    'email' => $userDetail->email,
+                    'password' => '',
+                    'phone' => $userDetail->phone
+                ]);
+                UserDetail::where('id', $userDetail->id)->update(['user_id' => $user->id]);
+            }
+        }
+
+        $user_id = null;
+        if(isset($user)) {
+            $user_id = $user->id;
+        }
+        foreach($products->items as $product) {
+            $order = Order::create([
+                'user_id' => $user_id,
+                'user_detail_id' => $userDetail->id,
+                'product_id' => $product['item']->id,
+                'product_qty' => Helper::implode($product['product_qty']),
+                'product_price' => (double)$product['price'],
+                'checkout_date' => now(),
+                'ip_address' =>  $request->ip(),
+                'is_pay' =>  '0',
+                'product_color' => Helper::implode($product['colors']),
+                'product_size' => Helper::implode($product['sizes']),
+                'is_confirm' => '0'
+            ]);
+        }
+        return redirect()->route('send.OTP', $userDetail->id);
     }
 }

@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/forgot-session', 'Frontend\PageController@sessionForgot');
+
 Route::get('/', 'Frontend\PageController@index');
 
 Auth::routes();
@@ -54,9 +56,46 @@ Route::post('/decrease-cart-qty', 'Frontend\Shoppings\ShoppingController@decreas
 Route::post('/increase-cart-qty', 'Frontend\Shoppings\ShoppingController@increaseCartQty')
         ->name('increase.cartquantity');
 
+Route::middleware(['isvalid-for-shopping'])->group(function() {
+    Route::any(
+        'otp-verification/{userDetail}/{oTPVerification}', 'Email\EmailVerificationController@otpVerification')->name('otpVerification');
+});
+
+Route::get('paypal', 'Frontend\Shoppings\PayPalController@paypal')->name('payment.paypal');
+Route::get('payment', 'Frontend\Shoppings\PayPalController@payment')->name('payment');
+Route::get('cancel', 'Frontend\Shoppings\PayPalController@cancel')->name('payment.cancel');
+Route::get('payment/success', 'Frontend\Shoppings\PayPalController@success')->name('payment.success');
+
+Route::middleware(['isvalid-for-payment'])->group(function() {
+    Route::get(
+        'checkout-payment/{userDetail}', 'Frontend\Shoppings\CheckoutController@getCheckoutPayment')
+        ->name('checkout.payemnt');
+    Route::post(
+        'checkout-payment/{userDetail}', 'Frontend\Shoppings\CheckoutController@postCheckoutPayment')
+        ->name('checkout.payemnt');
+    Route::post(
+            'pay-on-delivery/{userDetail}', 'Frontend\Shoppings\CheckoutController@payOnDelivery')
+        ->name('pay.on.delivery');
+    Route::any('check-out/payment/{userDetail}/{type}',
+            'Frontend\Shoppings\CheckoutController@upiPaymentChoose')->name('choose.upi.payment');
+
+    // Paytm Payment Route
+    Route::get('/initiate/payment/{userDetail}','Frontend\Shoppings\PaytmController@initiate')
+        ->name('initiate.payment');
+    Route::post('/paytm/payment/{userDetail}','Frontend\Shoppings\PaytmController@pay')
+        ->name('make.payment');
+    Route::post('/payment/status', 'Frontend\Shoppings\PaytmController@paymentCallback')
+        ->name('status.payment');
+});
+
 // Checkout
 Route::get('/checkout', 'Frontend\Shoppings\ShoppingController@cartCheckOut')
         ->name('cart.checkout');
+Route::post(
+        'checkout-placeorder', 'Frontend\Shoppings\ShoppingController@placeOrder')
+        ->name('checkout.placeorder');
+Route::get('send-otp/{userDetail}', 'Email\EmailVerificationController@sendOTP')
+        ->name('send.OTP');
 
 
 Route::prefix('/')->group(function() {
@@ -73,6 +112,8 @@ Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
     Route::any('/menus', 'Admin\HeaderController@menu')->name('admin.menus');
     // Tags Route
     Route::any('/tags', 'Admin\HeaderController@tag')->name('admin.tags');
+    // Payment Types
+    Route::any('/payment-type', 'Admin\HomePageController@paymentTypes')->name('payment.type');
     // Home Slider routes
     Route::any('/home-slider', 'Admin\HomePageController@homeSlider')->name('admin.home.slider');
     Route::any('/add-home-slider', 'Admin\HomePageController@addHomeSlider')->name('add.home.slider');

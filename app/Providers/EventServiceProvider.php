@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Events\AddToCartEvent;
+use App\Events\SendOTPEvent;
 use App\Listeners\AddToCartListener;
+use App\Listeners\SendOTPListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -20,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
         AddToCartEvent::class => [
             AddToCartListener::class,
         ],
+        SendOTPEvent::class => [
+            SendOTPListener::class,
+        ]
     ];
 
     /**

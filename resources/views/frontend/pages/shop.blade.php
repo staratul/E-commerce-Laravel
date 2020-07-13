@@ -43,7 +43,7 @@
                     </div>
                     <div class="product-list">
                         <form id="addcartform">
-                            <div class="row"> 
+                            <div class="row">
                                 @if (isset($products))
                                     @foreach ($products as $product)
                                     <div class="col-lg-4 col-sm-6">
@@ -95,53 +95,5 @@
 @endsection
 
 @push('js')
-<script>
-    $(() => {
-        addToCart = (product_id,quantity,color,size) => {
-            // Submit Form data using ajax
-            $.ajax({
-                url: "{{ route('addcart') }}",
-                method: "POST",
-                data:{
-                    product_id,quantity,size,color
-                },
-                headers: {"X-CSRF-TOKEN" : $('meta[name="csrf-token"]').attr('content')},
-                success: function(response) {
-                    let url;
-                    if(response) {
-                        url = '{{ route("cart.notifications", ":id") }}';
-                        url = url.replace(':id', response.cart.id);
-                        $.ajax({
-                            url,
-                            method: "GET",
-                            success: function(res) {
-                                let totalPrice=0, count=0;
-                                for(data in res.items) {
-                                    totalPrice += res.items[data].price;
-                                    count++;
-                                }
-                                $("#select-total-price").text(totalPrice);
-                                $(".cart-price").text(totalPrice);
-                                $("#icon_bag_total").text(count);
-                            },
-                            error: function(reject) {
-                                console.log(reject);
-                            }
-                        });
-                    }
-                    if(response) {
-                        toastr.success(response.success);
-                    }
-
-                },
-                error: function(reject) {
-                    $.each(reject.responseJSON.errors, function (key, item)
-                    {
-                        toastr.error(item);
-                    });
-                }
-            });
-        }
-    });
-</script>
+<script src="{{ asset('js/manual/addtocartsingle.js') }}"></script>
 @endpush

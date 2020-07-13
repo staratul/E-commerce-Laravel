@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AddToCart extends Notification implements ShouldQueue
+class AddToCart extends Notification
 {
     use Queueable;
 

@@ -123,6 +123,12 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'twilio' => [
+        'TWILIO_SID'  => env('TWILIO_SID', 'ACccb7b4e53d191bdab84212b38a8ae1af'),
+        'TWILIO_AUTH_TOKEN' => env('TWILIO_AUTH_TOKEN', '4a2937404d4571cba49ae5104b31ad8c'),
+        'TWILIO_NUMBER'     => env('TWILIO_NUMBER', '+12058462308')
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -165,7 +171,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -229,6 +235,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Helper' => App\Http\Helper::class,
+        'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
 
     ],
 

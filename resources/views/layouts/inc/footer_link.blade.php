@@ -26,6 +26,8 @@
         $("#profile-dropdown").mouseout(() => {
             $(".dropdown-content").css("display", "none");
         });
+        $('.alert-danger').fadeIn().delay(5000).fadeOut();
+        $('.alert-success').fadeIn().delay(5000).fadeOut();
     });
 </script>
 @stack('js')

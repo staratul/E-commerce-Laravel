@@ -22,17 +22,34 @@ class ShoppingCart
 
     public function addToCart($item, $id) {
         try {
-            $storedItem = ['qty' => 0, 'price' => $item->selling_price, 'item'=> $item];
+            $sizes=[];$colors=[];$quantity=[];
+            $storedItem = ['qty' => 0, 'price' => $item->selling_price, 'item'=> $item, 'sizes' => [], 'colors' => [], 'product_qty' => []];
             if($this->items) {
                 if(array_key_exists($id, $this->items)) {
+                    $this->items[$id]['item'] = $item;
                     $storedItem = $this->items[$id];
+                    foreach($storedItem['sizes'] as $size) {
+                        array_push($sizes, $size);
+                    }
+                    foreach($storedItem['colors'] as $color) {
+                        array_push($colors, $color);
+                    }
+                    foreach($storedItem['product_qty'] as $qty) {
+                        array_push($quantity, $qty);
+                    }
                     $this->totalQty = $this->totalQty - $storedItem['qty'];
                     $this->totalPrice = $this->totalPrice - $storedItem['price'];
                     $item->cart->quantity = $item->cart->quantity + $storedItem['qty'];
                 }
             }
+            array_push($sizes, $item->cart->size);
+            array_push($colors, $item->cart->color);
+            array_push($quantity, (int)$item['cart']->unreadNotifications[0]->data['cart']['quantity']);
             $storedItem['qty'] = $item->cart->quantity;
             $storedItem['price'] = $item->selling_price * $storedItem['qty'];
+            $storedItem['sizes'] = $sizes;
+            $storedItem['product_qty'] = $quantity;
+            $storedItem['colors'] = $colors;
             $this->items[$id] = $storedItem;
             $this->totalQty += $storedItem['qty'];
             $this->totalPrice += $item->selling_price * $storedItem['qty'];

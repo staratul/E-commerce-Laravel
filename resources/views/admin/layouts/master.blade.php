@@ -210,6 +210,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <p>Brand</p>
                   </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('payment.type') }}" class="nav-link @if(Route::currentRouteName() === 'payment.type') active @endif">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Payment Types</p>
+                    </a>
+                </li>
               </ul>
             </li>
           </ul>

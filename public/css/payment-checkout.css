@@ -1,0 +1,180 @@
+* {box-sizing: border-box}
+        body {font-family: "Lato", sans-serif;}
+
+        /* Style the tab */
+        .tab {
+            float: left;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            width: 25%;
+            height: 100%;
+        }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            display: block;
+            background-color: inherit;
+            color: black;
+            padding: 22px 16px;
+            width: 100%;
+            border: none;
+            outline: none;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current "tab button" class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+            float: left;
+            padding: 0px 12px;
+            border: 1px solid #ccc;
+            width: 75%;
+            border-left: none;
+            height: 100%;
+        }
+        .place-order {
+            height: 100%;
+        }
+        body {
+            background: #f5f5f5
+        }
+
+        .rounded {
+            border-radius: 1rem
+        }
+
+        .nav-pills .nav-link {
+            color: #555
+        }
+
+        .nav-pills .nav-link.active {
+            color: white
+        }
+
+        input[type="radio"] {
+            margin-right: 5px
+        }
+
+        .bold {
+            font-weight: bold
+        }
+        .input-group-addon {
+            background-color: transparent;
+            border-left: 0;
+        }
+
+        .cc-number.identified {
+            background-repeat: no-repeat;
+            background-position-y: 3px;
+            background-position-x: 99%;
+        }
+
+
+
+        .one-card > div {
+            height: 150px;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        .two-card > div {
+            height: 80px;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 48%;
+        }
+
+        .two-card div.amex-cvc-preview {
+            float: right;
+        }
+
+
+        .payment-form-icon {
+            line-height: 46px;
+            margin-right: 10px;
+            color: #dddddd !important;
+            }
+        .paymentmode {
+            box-sizing: border-box;
+            overflow-wrap: break-word;
+        }
+        .payment_type_img {
+            border-radius: 50%;
+            height: 45px;
+            widows: 45px;
+        }
+        #upi_pay ul {
+            list-style: none;
+        }
+        .option-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -ms-appearance: none;
+            -o-appearance: none;
+            appearance: none;
+            position: relative;
+            top: 13.33333px;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 40px;
+            width: 40px;
+            transition: all 0.15s ease-out 0s;
+            background: #cbd1d8;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 0.5rem;
+            outline: none;
+            position: relative;
+            z-index: 1000;
+            }
+            .option-input:hover {
+            background: #9faab7;
+            }
+            .option-input:checked {
+            background: #40e0d0;
+            }
+            .option-input:checked::before {
+            height: 40px;
+            width: 40px;
+            position: absolute;
+            content: '✔';
+            display: inline-block;
+            font-size: 26.66667px;
+            text-align: center;
+            line-height: 40px;
+            }
+            .option-input:checked::after {
+            -webkit-animation: click-wave 0.65s;
+            -moz-animation: click-wave 0.65s;
+            animation: click-wave 0.65s;
+            background: #40e0d0;
+            content: '';
+            display: block;
+            position: relative;
+            z-index: 100;
+            }
+            .option-input.radio {
+            border-radius: 50%;
+            }
+            .option-input.radio::after {
+            border-radius: 50%;
+            }
+
+
+

@@ -10,6 +10,7 @@ use App\Models\Admin\SubCategory;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Products\Product;
 use App\Models\Admin\Products\ProductColor;
+use Illuminate\Support\Facades\Session;
 
 class PageController extends Controller
 {
@@ -86,5 +87,13 @@ class PageController extends Controller
     public function shoppingCart()
     {
         return view('frontend.pages.shopping-cart');
+    }
+
+    public function sessionForgot(Request $request)
+    {
+        $request->session()->forget('shoppingcart');
+        session()->save();
+        $oldCart = Session::has('shoppingcart') ? Session::get('shoppingcart') : null;
+        dd("done", $oldCart);
     }
 }

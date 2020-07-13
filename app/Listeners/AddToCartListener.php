@@ -6,7 +6,7 @@ use App\Notifications\AddToCart;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class AddToCartListener implements ShouldQueue
+class AddToCartListener
 {
     /**
      * Create the event listener.

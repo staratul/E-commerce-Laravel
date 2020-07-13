@@ -43,6 +43,7 @@
             text-decoration: none;
         }
     </style>
+    @stack('css')
 </head>
 
 <body>

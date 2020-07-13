@@ -54,7 +54,7 @@
                                             </td>
                                             <td class="total-price first-row" id="priceintoqty-{{ $cart['item']->id }}">₹{{ $cart["price"] }}.00</td>
                                             <td class="close-td first-row">
-                                                <button onclick="removeCartItem({{ $cart['item']->id }})" type="button" class="btn btn-xs btn-danger"><i class="ti-close"></i></button>
+                                                <button onclick="removeCartItem({{ $cart['item']->id }}, {{ $cart['item']->cart->id }})" type="button" class="btn btn-xs btn-danger"><i class="ti-close"></i></button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -107,11 +107,11 @@
 @push('js')
 <script>
     $(() => {
-        removeCartItem = (id) => {
+        removeCartItem = (id, cart_id) => {
             $.ajax({
                 url: "{{ route('remove.cartitem') }}",
                 method: "POST",
-                data: {id},
+                data: {id,cart_id},
                 headers: {"X-CSRF-TOKEN" : $('meta[name="csrf-token"]').attr('content')},
                 success: function(response) {
                     let html="",count=0;
@@ -138,22 +138,22 @@
                                     </td></tr>`;
 
                                 $("#totalCart").append(html);
-                            } 
+                            }
                             $("#icon_bag_total").text(count);
                             $(".cart-price").text('₹'+response.cart.totalPrice);
                             $("#totalqty").text(response.cart.totalQty);
                             $("#subtotal").text('₹'+response.cart.totalPrice);
-                            $("#carttotal").text('₹'+response.cart.totalPrice);  
+                            $("#carttotal").text('₹'+response.cart.totalPrice);
                         } else {
                             $("#totalqty").text(0);
                             $("#icon_bag_total").text(count);
                             $(".cart-price").text('₹'+response.cart.totalPrice);
                             $("#subtotal").text('₹0.00');
-                            $("#carttotal").text('₹0.00');  
+                            $("#carttotal").text('₹0.00');
                             html = `<tr><td colspan="5">
                                     <img src="{{ asset('img/cart-page/empty-cart.png') }}" alt="empty-cart"><br>
                                     <a href="{{ url('shop') }}" class="btn btn-primary rounded-0">ADD ITEM</a></td></tr>`;
-                            $("#totalCart").append(html);   
+                            $("#totalCart").append(html);
                         }
                     }
                     var proQty = $('.pro-qty');
@@ -198,7 +198,7 @@
                     $(".cart-price").text('₹'+response.cart.totalPrice);
                     $("#totalqty").text(response.cart.totalQty);
                     $("#subtotal").text('₹'+response.cart.totalPrice);
-                    $("#carttotal").text('₹'+response.cart.totalPrice);  
+                    $("#carttotal").text('₹'+response.cart.totalPrice);
                     $("#priceintoqty-"+id).text('₹'+response.item.price);
                 },
                 error: function(reject) {
@@ -221,7 +221,7 @@
                     $(".cart-price").text('₹'+response.cart.totalPrice);
                     $("#totalqty").text(response.cart.totalQty);
                     $("#subtotal").text('₹'+response.cart.totalPrice);
-                    $("#carttotal").text('₹'+response.cart.totalPrice);  
+                    $("#carttotal").text('₹'+response.cart.totalPrice);
                     $("#priceintoqty-"+id).text('₹'+response.item.price);
 
                 },

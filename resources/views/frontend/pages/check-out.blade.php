@@ -20,7 +20,9 @@
     <!-- Shopping Cart Section Begin -->
     <section class="checkout-section spad">
         <div class="container">
-            <form action="#" class="checkout-form" id="checkout-form">
+            @include('common.messages')
+            <form action="{{ route('checkout.placeorder') }}" class="checkout-form" id="checkout-form" method="POST">
+                @csrf
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="checkout-content">
@@ -28,14 +30,18 @@
                         </div>
                         <h4>Biiling Details</h4>
                         <div class="row">
-                            <div class="col-lg-12">
-                                <label for="fir">Name<span>*</span></label>
-                                <input type="text" id="fir" name="name" placeholder="Name" required>
+                            <div class="col-lg-6">
+                                <label for="first_name">Name<span>*</span></label>
+                                <input type="text" id="first_name" name="first_name" placeholder="First Name" required>
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="last_name">Name<span>*</span></label>
+                                <input type="text" id="last_name" name="last_name" placeholder="Last Name" required>
                             </div>
                             <div class="col-lg-12">
-                                <label for="address-street">Address<span>*</span></label>
-                                <input type="text" name="address-street" id="address-street" class="street-first" placeholder="Address(House No, Building, Street)" required>
-                                <input type="text" name="area" id="area" placeholder="Address(Area)" required>
+                                <label for="address1">Address<span>*</span></label>
+                                <input type="text" name="address1" id="address1" class="address1" placeholder="Address(House No, Building, Street)" required>
+                                <input type="text" name="address2" id="address2" placeholder="Address(Area)" required>
                             </div>
                             <div class="col-lg-12">
                                 <label for="pincode">Pin Code</label>
@@ -47,17 +53,17 @@
                             </div>
                             <div class="col-lg-6">
                                 <label for="email">Email Address<span>*</span></label>
-                                <input type="text" id="email" name="email" placeholder="Email Address" required>
+                                <input type="email" id="email" name="email" placeholder="Email Address" required>
                             </div>
                             <div class="col-lg-6">
                                 <label for="phone">Phone<span>*</span></label>
-                                <input type="text" id="phone" name="phone" placeholder="Phone" required>
+                                <input type="number" name="phone"  id="phone" placeholder="Phone" required>
                             </div>
                             <div class="col-lg-12">
                                 <div class="create-item">
                                     <label for="acc-create">
                                         Create an account?
-                                        <input type="checkbox" id="acc-create">
+                                        <input type="checkbox" name="is_register" value="1" id="acc-create">
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
@@ -76,15 +82,12 @@
                                     @if(isset($products))
                                         @foreach ($products->items as $product)
                                             <li class="fw-normal">
-                                                {{ Str::limit($product['item']->sub_title, 30, '...') }} 
-                                                x {{ $product['qty'] }} 
+                                                {{ Str::limit($product['item']->sub_title, 30, '...') }}
+                                                x {{ $product['qty'] }}
                                                 <span>${{ $product['price'] }}.00</span>
                                             </li>
                                         @endforeach
                                     @endif
-                                    {{-- <li class="fw-normal">Combination x 1 <span>$60.00</span></li>
-                                    <li class="fw-normal">Combination x 1 <span>$60.00</span></li>
-                                    <li class="fw-normal">Combination x 1 <span>$120.00</span></li> --}}
                                     <li class="fw-normal">Subtotal <span>${{ $products->totalPrice }}.00</span></li>
                                     <li class="total-price">Total <span>${{ $products->totalPrice }}.00</span></li>
                                 </ul>
@@ -122,7 +125,7 @@
     <script>
         $(() => {
             $("#checkout-form").validate();
-            $("#checkout-form").on("submit", (e) => {   
+            $("#checkout-form").on("submit", (e) => {
                 $(".error").css({"color":"red"});
                 $(".checkout-form input").css("margin-bottom", "0px");
             });
