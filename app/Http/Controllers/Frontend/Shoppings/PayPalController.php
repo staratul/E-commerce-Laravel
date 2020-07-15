@@ -64,7 +64,7 @@ class PayPalController extends Controller
         $response = $provider->getExpressCheckoutDetails($request->token);
 
         if (in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING'])) {
-            dd('Your payment was successfully. You can create success page here.');
+            return redirect()->route('orderDetails');
         }
 
         dd('Something is wrong.');

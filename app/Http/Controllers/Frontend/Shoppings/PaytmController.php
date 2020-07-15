@@ -57,7 +57,7 @@ class PaytmController extends Controller
         // update the db data as per result from api call
         if ($transaction->isSuccessful()) {
             Paytm::where('order_id', $order_id)->update(['status' => 1, 'transaction_id' => $transaction->getTransactionId()]);
-            return redirect(route('home'))->with('message', "Your payment is successfull.");
+            return redirect()->route('orderDetails');
 
         } else if ($transaction->isFailed()) {
             Paytm::where('order_id', $order_id)->update(['status' => 0, 'transaction_id' => $transaction->getTransactionId()]);

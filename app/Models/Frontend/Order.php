@@ -2,6 +2,8 @@
 
 namespace App\Models\Frontend;
 
+use App\Models\Admin\Products\Product;
+use App\UserDetail;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
@@ -19,4 +21,9 @@ class Order extends Model
         'product_size',
         'is_confirm'
     ];
+
+    public function userDetails()
+    {
+        return $this->hasMany(UserDetail::class);
+    }
 }

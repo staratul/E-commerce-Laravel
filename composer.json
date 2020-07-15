@@ -19,6 +19,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "nexmo/laravel": "^2.2",
+        "razorpay/razorpay": "^2.5",
         "srmklive/paypal": "^1.7",
         "stripe/stripe-php": "^7.39",
         "twilio/sdk": "^6.8",

@@ -23,7 +23,6 @@ class CheckoutController extends Controller
 
     public function postCheckoutPayment(Request $request, UserDetail $userDetail)
     {
-        dd($request->all());
         try {
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
@@ -50,8 +49,7 @@ class CheckoutController extends Controller
                 "currency" => "inr",
                 "description" => "Test payment from stripe.test." ,
             ]);
-            Session::flash('success', 'Payment successful!');
-            return back();
+            return redirect()->route('orderDetails');
 
             } catch (\Exception $ex) {
                 Session::flash('error','Payment Failed.');
@@ -59,12 +57,12 @@ class CheckoutController extends Controller
             }
     }
 
-    public function payOnDelivery(Request $request)
+    public function payOnDelivery(Request $request, UserDetail $userDetail)
     {
         request()->validate([
             'g-recaptcha-response' => 'required|captcha'
         ]);
-        dd("success");
+        return redirect()->route('order.details', $userDetail->id);
     }
 
     public function upiPaymentChoose(Request $request, UserDetail $userDetail)
@@ -79,7 +77,7 @@ class CheckoutController extends Controller
                         return redirect()->route('payment.paypal');
                         break;
                     case 'PhonePe':
-                        dd("phonepe");
+                        dd("PhonePey");
                         break;
                     case 'GooglePay':
                         dd("googlepay");

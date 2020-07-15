@@ -10,6 +10,7 @@ use App\Models\Admin\Products\ProductSizeStock;
 use App\Models\Admin\Products\ProductColorStock;
 use App\Models\Admin\Products\ProductPreviewImage;
 use App\Models\Admin\SubCategory;
+use App\Models\Frontend\Order;
 
 class Product extends Model
 {
@@ -75,5 +76,10 @@ class Product extends Model
     public function sub_category()
     {
         return $this->belongsTo(SubCategory::class);
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }

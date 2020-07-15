@@ -6,13 +6,13 @@
             <div class="col-md-9 mb-5">
                 <h2>Choose payment mood</h2>
                 <div class="tab mt-4 paymentmode">
-                    <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen">Pay On Delivery</button>
-                    <button class="tablinks" onclick="openCity(event, 'Paris')">CREDIT/DEBIT CARD</button>
+                    <button class="tablinks" onclick="openCity(event, 'pay_on_delivery')" id="defaultOpen">PAY ON DELIVERY</button>
+                    <button class="tablinks" onclick="openCity(event, 'cd_card')">CREDIT/DEBIT CARD</button>
                     <button class="tablinks" onclick="openCity(event, 'upi_pay')">PAYTM/PHONEPE/GOOGLE PAY</button>
                 </div>
 
-                <div id="London" class="tabcontent mt-4">
-                    <h3>Pay On Delivery</h3>
+                <div id="pay_on_delivery" class="tabcontent mt-4">
+                    <h3>PAY ON DELIVERY</h3>
                     @include('common.messages')
                     <form action="{{ route('pay.on.delivery', $userDetail->id) }}" method="POST">
                         @csrf
@@ -27,7 +27,7 @@
                     </form>
                 </div>
 
-                <div id="Paris" class="tabcontent mt-4">
+                <div id="cd_card" class="tabcontent mt-4">
                     <h3>CREDIT/DEBIT CARD</h3>
                     <div class="container-fluid py-3">
                         @if (Session::has('success'))
@@ -174,6 +174,7 @@
             let url = "{{ url('/check-out/payment/') }}/"+id+"/"+type;
             $("#upi_payment_mode_form").attr("action", url);
         }
+        $(".razorpay-payment-button").addClass("btn btn-success rounded-0");
     });
 </script>
 @endpush

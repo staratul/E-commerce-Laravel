@@ -4,13 +4,16 @@ namespace App\Http\Controllers\Frontend\Shoppings;
 
 use App\User;
 use App\UserDetail;
+use App\Http\Helper;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use App\Models\Frontend\Cart;
 use App\Events\AddToCartEvent;
+use App\Models\Frontend\Order;
 use Nexmo\Laravel\Facade\Nexmo;
+use App\Events\OrderShippedEvent;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Helper;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Frontend\ShoppingCart;
 use App\Models\Admin\Products\Product;
@@ -18,7 +21,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\UserDetailStoreRequest;
-use App\Models\Frontend\Order;
 
 class ShoppingController extends Controller
 {
@@ -173,5 +175,19 @@ class ShoppingController extends Controller
             ]);
         }
         return redirect()->route('send.OTP', $userDetail->id);
+    }
+
+    public function orderDetails(UserDetail $userDetail)
+    {
+        $orders = DB::table('orders')->select(
+                                'orders.*', 'products.title', 'products.sub_title',
+                                'product_images.product_image_url'
+                                )
+                            ->join('products', 'products.id', 'orders.product_id')
+                            ->join('product_images', 'product_images.product_id', 'products.id')
+                            ->where('user_detail_id', $userDetail->id)
+                            ->get();
+         // event(new OrderShippedEvent($userDetail, $orders));
+         return view('frontend.orders.order_details', compact('userDetail', 'orders'));
     }
 }

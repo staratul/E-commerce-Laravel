@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Models\Admin\Products\Product;
+use App\Models\Frontend\Order;
 use App\Models\Frontend\OTPVerification;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,4 +24,10 @@ class UserDetail extends Model
     {
         return $this->hasMany(OTPVerification::class, 'user_id', 'id');
     }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
 }

@@ -61,11 +61,6 @@ Route::middleware(['isvalid-for-shopping'])->group(function() {
         'otp-verification/{userDetail}/{oTPVerification}', 'Email\EmailVerificationController@otpVerification')->name('otpVerification');
 });
 
-Route::get('paypal', 'Frontend\Shoppings\PayPalController@paypal')->name('payment.paypal');
-Route::get('payment', 'Frontend\Shoppings\PayPalController@payment')->name('payment');
-Route::get('cancel', 'Frontend\Shoppings\PayPalController@cancel')->name('payment.cancel');
-Route::get('payment/success', 'Frontend\Shoppings\PayPalController@success')->name('payment.success');
-
 Route::middleware(['isvalid-for-payment'])->group(function() {
     Route::get(
         'checkout-payment/{userDetail}', 'Frontend\Shoppings\CheckoutController@getCheckoutPayment')
@@ -86,7 +81,21 @@ Route::middleware(['isvalid-for-payment'])->group(function() {
         ->name('make.payment');
     Route::post('/payment/status', 'Frontend\Shoppings\PaytmController@paymentCallback')
         ->name('status.payment');
+
+    // PayPal Payment Route
+    Route::get('paypal', 'Frontend\Shoppings\PayPalController@paypal')
+        ->name('payment.paypal');
+    Route::get('paypal-payment', 'Frontend\Shoppings\PayPalController@payment')
+        ->name('payment');
+    Route::get('paypal/payment-cancel', 'Frontend\Shoppings\PayPalController@cancel')
+        ->name('payment.cancel');
+    Route::get('paypal/payment-success', 'Frontend\Shoppings\PayPalController@success')
+        ->name('payment.success');
 });
+
+// Order Details Route
+Route::get('order-details/{userDetail}', 'Frontend\Shoppings\ShoppingController@orderDetails')
+    ->name('order.details');
 
 // Checkout
 Route::get('/checkout', 'Frontend\Shoppings\ShoppingController@cartCheckOut')
