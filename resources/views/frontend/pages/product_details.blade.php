@@ -77,7 +77,7 @@
                                         <div class="pd-size-choose">
                                             @foreach ($product->productColors as $k => $color)
                                                 <div class="cc-item">
-                                                    <input type="radio" name="color" id="sm-color-{{ $k }}" value="{{ $color->code }}" {{ $color->color == $product->product_color ? 'checked' : '' }}>
+                                                    <input type="radio" name="color" id="sm-color-{{ $k }}" value="{{ $color->color }}" {{ $color->color == $product->product_color ? 'checked' : '' }}>
                                                     <label for="sm-color-{{ $k }}" class="{{ $color->color == $product->product_color ? 'active' : '' }}">
                                                         <i class="fa fa-circle" style="color: {{ $color->code }};font-size:23px" aria-hidden="true"></i>
                                                     </label>
@@ -311,7 +311,7 @@
                                     <i class="icon_heart_alt"></i>
                                 </div>
                                 <ul>
-                                    <li class="w-icon active"><a href="#"><i class="icon_bag_alt"></i></a></li>
+                                    <li class="w-icon active"><a href="javascript:;" onclick="addToCart({{$product->id}},1,'{{ $product->product_color}}','{{ $product->product_size}}')"><i class="icon_bag_alt"></i></a></li>
                                     <li class="quick-view">
                                         <a href="{{ route('product.details', [$product->id,Helper::slug($product->sub_title)]) }}">
                                             + Quick View
@@ -341,6 +341,7 @@
 @endsection
 
 @push('js')
+<script src="{{ asset('js/manual/addtocartsingle.js') }}"></script>
 <script>
     $(() => {
         $("#addcartform").on("submit", (e) => {

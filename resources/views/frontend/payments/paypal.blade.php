@@ -10,7 +10,9 @@
 @push('js')
     <script>
         $(() => {
-            let url = "{{ route('payment') }}";
+            let id = "{{ isset($userDetail) ? $userDetail->id : '' }}";
+            let typeId = "{{ isset($typeId) ? $typeId : '' }}";
+            let url = "{{ url('/paypal-payment') }}/"+id+"/"+typeId;
             $("#paytm_form").attr("action", url);
             $("#paytm_form").submit();
         });

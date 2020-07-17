@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\Frontend\Shoppings;
 
+use App\UserDetail;
 use Illuminate\Http\Request;
+use App\Models\Frontend\Order;
 use App\Models\Frontend\Paytm;
 use App\Http\Controllers\Controller;
 use Anand\LaravelPaytmWallet\Facades\PaytmWallet;
-use App\UserDetail;
 
 class PaytmController extends Controller
 {
     // display a form for payment
-    public function initiate(UserDetail $userDetail)
+    public function initiate(UserDetail $userDetail, $typeId=null)
     {
-        return view('frontend.payments.paytm',compact('userDetail'));
+        return view('frontend.payments.paytm',compact('userDetail', 'typeId'));
     }
 
-    public function pay(Request $request, UserDetail $userDetail)
+    public function pay(Request $request, UserDetail $userDetail, $typeId=null)
     {
         $amount = 100; //Amount to be paid
 
@@ -38,12 +39,12 @@ class PaytmController extends Controller
             'mobile_number' => $userData['mobile'],
             'email' => $userData['email'], // your user email address
             'amount' => $amount, // amount will be paid in INR.
-            'callback_url' => route('status.payment') // callback URL
+            'callback_url' => route('status.payment', [$userDetail->id, $typeId]) // callback URL
         ]);
         return $payment->receive();  // initiate a new payment
     }
 
-    public function paymentCallback()
+    public function paymentCallback(UserDetail $userDetail, $typeId=null)
     {
         $transaction = PaytmWallet::with('receive');
 
@@ -57,7 +58,12 @@ class PaytmController extends Controller
         // update the db data as per result from api call
         if ($transaction->isSuccessful()) {
             Paytm::where('order_id', $order_id)->update(['status' => 1, 'transaction_id' => $transaction->getTransactionId()]);
-            return redirect()->route('orderDetails');
+            Order::where('user_detail_id', $userDetail->id)
+                            ->update([
+                                        'payment_type_id' => $typeId,
+                                        'is_pay' => 1
+                                    ]);
+            return redirect()->route('order.details', $userDetail->id);
 
         } else if ($transaction->isFailed()) {
             Paytm::where('order_id', $order_id)->update(['status' => 0, 'transaction_id' => $transaction->getTransactionId()]);

@@ -75,22 +75,20 @@ Route::middleware(['isvalid-for-payment'])->group(function() {
             'Frontend\Shoppings\CheckoutController@upiPaymentChoose')->name('choose.upi.payment');
 
     // Paytm Payment Route
-    Route::get('/initiate/payment/{userDetail}','Frontend\Shoppings\PaytmController@initiate')
+    Route::get('/initiate/payment/{userDetail}/{typeId}','Frontend\Shoppings\PaytmController@initiate')
         ->name('initiate.payment');
-    Route::post('/paytm/payment/{userDetail}','Frontend\Shoppings\PaytmController@pay')
+    Route::post('/paytm/payment/{userDetail}/{typeId}','Frontend\Shoppings\PaytmController@pay')
         ->name('make.payment');
-    Route::post('/payment/status', 'Frontend\Shoppings\PaytmController@paymentCallback')
-        ->name('status.payment');
+    Route::post('/payment/status/{userDetail}/{typeId}', 'Frontend\Shoppings\PaytmController@paymentCallback')->name('status.payment');
 
     // PayPal Payment Route
-    Route::get('paypal', 'Frontend\Shoppings\PayPalController@paypal')
+    Route::get('paypal/{userDetail}/{typeId}', 'Frontend\Shoppings\PayPalController@paypal')
         ->name('payment.paypal');
-    Route::get('paypal-payment', 'Frontend\Shoppings\PayPalController@payment')
-        ->name('payment');
+    Route::get('paypal-payment/{userDetail}/{typeId}', 'Frontend\Shoppings\PayPalController@payment')
+        ->name('paypal.payment');
     Route::get('paypal/payment-cancel', 'Frontend\Shoppings\PayPalController@cancel')
         ->name('payment.cancel');
-    Route::get('paypal/payment-success', 'Frontend\Shoppings\PayPalController@success')
-        ->name('payment.success');
+    Route::get('paypal/payment-success/{userDetail}/{typeId}', 'Frontend\Shoppings\PayPalController@success')->name('payment.success');
 });
 
 // Order Details Route

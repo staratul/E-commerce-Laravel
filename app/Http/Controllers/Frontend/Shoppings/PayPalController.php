@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Frontend\Shoppings;
 
+use App\UserDetail;
 use Illuminate\Http\Request;
+use App\Models\Frontend\Order;
 use App\Http\Controllers\Controller;
 use Srmklive\PayPal\Services\ExpressCheckout;
 
 class PayPalController extends Controller
 {
-    public function paypal()
+    public function paypal(UserDetail $userDetail, $typeId=null)
     {
-        return view('frontend.payments.paypal');
+        return view('frontend.payments.paypal', compact('userDetail', 'typeId'));
     }
 
     /**
@@ -18,7 +20,7 @@ class PayPalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function payment()
+    public function payment(UserDetail $userDetail, $typeId=null)
     {
         $data = [];
         $data['items'] = [
@@ -31,7 +33,7 @@ class PayPalController extends Controller
         ];
         $data['invoice_id'] = 'KARAM94_PAYPAL_1';
         $data['invoice_description'] = "Order #{$data['invoice_id']} Invoice";
-        $data['return_url'] = route('payment.success');
+        $data['return_url'] = route('payment.success', [$userDetail->id, $typeId]);
         $data['cancel_url'] = route('payment.cancel');
         $data['total'] = 100;
 
@@ -58,13 +60,18 @@ class PayPalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function success(Request $request)
+    public function success(Request $request, UserDetail $userDetail, $typeId=null)
     {
         $provider = new ExpressCheckout;
         $response = $provider->getExpressCheckoutDetails($request->token);
 
         if (in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING'])) {
-            return redirect()->route('orderDetails');
+            Order::where('user_detail_id', $userDetail->id)
+                            ->update([
+                                        'payment_type_id' => $typeId,
+                                        'is_pay' => 1
+                                    ]);
+            return redirect()->route('order.details', $userDetail->id);
         }
 
         dd('Something is wrong.');

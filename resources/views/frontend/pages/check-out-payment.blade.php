@@ -16,7 +16,7 @@
                     @include('common.messages')
                     <form action="{{ route('pay.on.delivery', $userDetail->id) }}" method="POST">
                         @csrf
-                        <input type="hidden" name="payment_type" id="2">
+                        <input type="hidden" name="payment_type" value="2">
                         <div class="form-group">
                             <label for="captcha">Captcha</label>
                               {!! NoCaptcha::renderJs() !!}
@@ -49,7 +49,7 @@
                                         <div class="card-body">
                                             <form action="{{ route('checkout.payemnt', $userDetail->id) }}" id="payment-form" method="POST"> @csrf
                                                 <input type="hidden" name="total_price" value="{{ $products->totalPrice }}">
-                                                <input type="hidden" name="payment_type" id="3">
+                                                <input type="hidden" name="payment_type" value="3">
                                                 <div id="payment-stripe" class="container">
                                                     <div class="row text-left justify-content-center">
                                                         <div class="col-md-12" id="card_error_message"></div>
@@ -102,6 +102,7 @@
                     <h3>PHONEPE/GOOGLE PAY</h3>
                     <form action="" method="POST" id="upi_payment_mode_form">
                         @csrf
+                        <input type="hidden" name="payment_type" value="5">
                         <ul>
                             <li>
                                 <label class="payment_radio_btn">

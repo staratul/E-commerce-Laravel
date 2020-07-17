@@ -11,8 +11,8 @@
     <script>
         $(() => {
             let id = "{{ isset($userDetail) ? $userDetail->id : '' }}";
-            let url = "{{ route('make.payment', ':id') }}";
-            url = url.replace(":id", id);
+            let typeId = "{{ isset($typeId) ? $typeId : '' }}";
+            let url = "{{ url('/paytm/payment') }}/"+id+"/"+typeId;;
             $("#paytm_form").attr("action", url);
             $("#paytm_form").submit();
         });

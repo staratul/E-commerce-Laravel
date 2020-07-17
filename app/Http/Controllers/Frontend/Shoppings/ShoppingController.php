@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\UserDetailStoreRequest;
+use App\Models\Admin\Products\ProductColorStock;
+use App\Models\Admin\Products\ProductSizeStock;
 
 class ShoppingController extends Controller
 {
@@ -177,7 +179,7 @@ class ShoppingController extends Controller
         return redirect()->route('send.OTP', $userDetail->id);
     }
 
-    public function orderDetails(UserDetail $userDetail)
+    public function orderDetails(Request $request, UserDetail $userDetail)
     {
         $orders = DB::table('orders')->select(
                                 'orders.*', 'products.title', 'products.sub_title',
@@ -187,7 +189,32 @@ class ShoppingController extends Controller
                             ->join('product_images', 'product_images.product_id', 'products.id')
                             ->where('user_detail_id', $userDetail->id)
                             ->get();
-         // event(new OrderShippedEvent($userDetail, $orders));
-         return view('frontend.orders.order_details', compact('userDetail', 'orders'));
+        // dd($orders);
+        foreach($orders as $order) {
+            $totalQty = 0; $totalSize = 0; $totalColor = 0;
+            $qty = explode(",",$order->product_qty);
+            $sizes = explode(",",$order->product_size);
+            $colors = explode(",",$order->product_color);
+            foreach($qty as $q)
+                $totalQty += (int)$q;
+
+            Product::where('id', $order->product_id)->decrement('total_in_stock', $totalQty);
+            foreach($sizes as $i => $s) {
+                ProductSizeStock::where([
+                                        ['product_id', $order->product_id],
+                                        ['size', $s]
+                                        ])->decrement('stock_in_size', $qty[$i]);
+            }
+            foreach($colors as $i => $c) {
+                ProductColorStock::where([
+                                        ['product_id', $order->product_id],
+                                        ['color', $c]
+                                        ])->decrement('stock_in_color', $qty[$i]);
+            }
+        }
+        $request->session()->forget('shoppingcart');
+        session()->save();
+        // event(new OrderShippedEvent($userDetail, $orders));
+        return view('frontend.orders.order_details', compact('userDetail', 'orders'));
     }
 }

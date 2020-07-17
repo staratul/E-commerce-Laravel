@@ -6,6 +6,7 @@ use Stripe\Charge;
 use Stripe\Stripe;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Frontend\Order;
 use App\UserDetail;
 use Illuminate\Support\Facades\Session;
 
@@ -49,7 +50,16 @@ class CheckoutController extends Controller
                 "currency" => "inr",
                 "description" => "Test payment from stripe.test." ,
             ]);
-            return redirect()->route('orderDetails');
+
+            if(isset($request->payment_type)) {
+                Order::where('user_detail_id', $userDetail->id)
+                            ->update([
+                                        'payment_type_id' => $request->payment_type,
+                                        'is_pay' => 1
+                                    ]);
+            }
+
+            return redirect()->route('order.details', $userDetail->id);
 
             } catch (\Exception $ex) {
                 Session::flash('error','Payment Failed.');
@@ -62,6 +72,11 @@ class CheckoutController extends Controller
         request()->validate([
             'g-recaptcha-response' => 'required|captcha'
         ]);
+        // Order::where()
+        if(isset($request->payment_type)) {
+            Order::where('user_detail_id', $userDetail->id)
+                        ->update(['payment_type_id' => $request->payment_type]);
+        }
         return redirect()->route('order.details', $userDetail->id);
     }
 
@@ -71,10 +86,10 @@ class CheckoutController extends Controller
             if(isset($request->upi_payment_mode)) {
                 switch($request->upi_payment_mode) {
                     case 'Paytm':
-                        return redirect()->route('initiate.payment', $userDetail->id);
+                        return redirect()->route('initiate.payment', [$userDetail->id,$request->payment_type]);
                         break;
                     case 'PayPal':
-                        return redirect()->route('payment.paypal');
+                        return redirect()->route('payment.paypal', [$userDetail->id,$request->payment_type]);
                         break;
                     case 'PhonePe':
                         dd("PhonePey");
