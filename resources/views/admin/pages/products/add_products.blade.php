@@ -10,7 +10,7 @@
          <!-- /.col -->
          <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-               <li class="breadcrumb-item"><a href="{{ route("home") }}">Dashboard</a></li>
+               <li class="breadcrumb-item"><a href="{{ route("admin.dashboard") }}">Dashboard</a></li>
                <li class="breadcrumb-item"><a href="{{ route("products.index") }}">Manage Products</a></li>
                <li class="breadcrumb-item active">{{ isset($product) ? 'Edit Product' : 'Add Product' }}</li>
             </ol>
@@ -414,7 +414,7 @@
                     if(sizeStock != false) {
                         if(sizeStock.length === 1 && i === 0) {
                             value = sizeStock[i].stock_in_size;
-                        } 
+                        }
                         if(sizeStock.length > 1) {
                             value = sizeStock[i].stock_in_size;
                         }
@@ -455,7 +455,7 @@
                     if(colorStock != false) {
                         if(colorStock.length === 1 && i === 0) {
                             value = colorStock[i].stock_in_color;
-                        } 
+                        }
                         if(colorStock.length > 1) {
                             value = colorStock[i].stock_in_color;
                         }
@@ -553,7 +553,7 @@
             });
             // Check if valid or not
             if(isValid === false) return false;
-            
+
             // Check if stock is correct with total stock
             if(colorStock !== TotalProductStock) {
                 toastr.error(`Total color stock must be = ${TotalProductStock}.`)

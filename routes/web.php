@@ -137,5 +137,9 @@ Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
         ->name('products.color');
     Route::any('state', 'Admin\Products\ProductTypeController@state')->name('products.state');
     Route::any('brand', 'Admin\Products\ProductTypeController@brand')->name('products.brand');
+
+    // Orders Route
+    Route::resource('orders', 'Admin\OrderController');
+    Route::get('order/{order}', 'Admin\OrderController@orderDetails')->name('order.detail');
 });
 

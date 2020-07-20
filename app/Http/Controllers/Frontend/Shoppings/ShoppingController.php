@@ -199,6 +199,7 @@ class ShoppingController extends Controller
                 $totalQty += (int)$q;
 
             Product::where('id', $order->product_id)->decrement('total_in_stock', $totalQty);
+            Order::where('id', $order->id)->update(['is_confirm' => '1']);
             foreach($sizes as $i => $s) {
                 ProductSizeStock::where([
                                         ['product_id', $order->product_id],

@@ -10,7 +10,7 @@
          <!-- /.col -->
          <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-               <li class="breadcrumb-item"><a href="{{ route("home") }}">Dashboard</a></li>
+               <li class="breadcrumb-item"><a href="{{ route("admin.dashboard") }}">Dashboard</a></li>
                <li class="breadcrumb-item"><a href="{{ route("admin.home.slider") }}">Manage Slider</a></li>
                <li class="breadcrumb-item active">{{ isset($homeSlider) ? 'Edit Slider' : 'Add Slider' }}</li>
             </ol>

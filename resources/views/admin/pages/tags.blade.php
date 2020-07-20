@@ -11,7 +11,7 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{ route("home") }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route("admin.dashboard") }}">Dashboard</a></li>
                 <li class="breadcrumb-item active">Tags</li>
               </ol>
             </div><!-- /.col -->
@@ -78,7 +78,7 @@
             },
             fields: [
                 { name: "category.category", type: "text", title: "Category", width: 100},
-                { name: "tags", type: "text", title: "Tag", width: 150, 
+                { name: "tags", type: "text", title: "Tag", width: 150,
                     itemTemplate: function(item, value) {
                         let tags = [], tag = "";
                         if(value.tags !== "") {

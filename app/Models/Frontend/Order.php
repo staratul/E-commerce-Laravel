@@ -2,6 +2,7 @@
 
 namespace App\Models\Frontend;
 
+use App\Http\Helper;
 use App\Models\Admin\Products\Product;
 use App\UserDetail;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,21 @@ class Order extends Model
 
     public function userDetails()
     {
-        return $this->hasMany(UserDetail::class);
+        return $this->belongsTo(UserDetail::class, 'user_detail_id', 'id');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function getCheckoutDateAttribute($date)
+    {
+        return Helper::dateFormat($date);
+    }
+
+    public function payment_type()
+    {
+        return $this->belongsTo(PaymentType::class);
     }
 }

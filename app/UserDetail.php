@@ -25,9 +25,9 @@ class UserDetail extends Model
         return $this->hasMany(OTPVerification::class, 'user_id', 'id');
     }
 
-    public function order()
+    public function orders()
     {
-        return $this->belongsTo(Order::class);
+        return $this->hasMany(Order::class, 'id', 'user_detail_id');
     }
 
 }
