@@ -182,6 +182,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\GlobalServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
+        App\Providers\VisitorCounterProvider::class,
 
     ],
 

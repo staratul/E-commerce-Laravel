@@ -141,5 +141,13 @@ Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
     // Orders Route
     Route::resource('orders', 'Admin\OrderController');
     Route::get('order/{order}', 'Admin\OrderController@orderDetails')->name('order.detail');
+
+    // Unique visitors
+    Route::get('unique-visitors', 'Admin\UserManageController@uniqueVisitors')->name('unique.visitors');
+
+    // Manage Users
+    Route::get('users', 'Admin\UserManageController@userList')->name('user.list');
+    Route::post('users-store', 'Admin\UserManageController@userStore')->name('users.store');
+    Route::get('users-edit/{user}', 'Admin\UserManageController@userEdit')->name('users.edit');
 });
 
