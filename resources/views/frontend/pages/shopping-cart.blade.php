@@ -108,6 +108,7 @@
 <script>
     $(() => {
         removeCartItem = (id, cart_id) => {
+            $("#image-loader").css("display", "block");
             $.ajax({
                 url: "{{ route('remove.cartitem') }}",
                 method: "POST",
@@ -144,6 +145,7 @@
                             $("#totalqty").text(response.cart.totalQty);
                             $("#subtotal").text('₹'+response.cart.totalPrice);
                             $("#carttotal").text('₹'+response.cart.totalPrice);
+                            $("#image-loader").css("display", "none");
                         } else {
                             $("#totalqty").text(0);
                             $("#icon_bag_total").text(count);
@@ -154,6 +156,7 @@
                                     <img src="{{ asset('img/cart-page/empty-cart.png') }}" alt="empty-cart"><br>
                                     <a href="{{ url('shop') }}" class="btn btn-primary rounded-0">ADD ITEM</a></td></tr>`;
                             $("#totalCart").append(html);
+                            $("#image-loader").css("display", "none");
                         }
                     }
                     var proQty = $('.pro-qty');
@@ -180,6 +183,7 @@
                     toastr.success(response.success);
                 },
                 error: function(reject) {
+                    $("#image-loader").css("display", "none");
                     console.log(reject);
                 }
             });
@@ -188,44 +192,52 @@
         qtyDecrease = (id) => {
             let qty;
             qty = Number($("#qtyTotal").val());
-            $.ajax({
-                url: "{{ route('decrease.cartquantity') }}",
-                method: "POST",
-                data: {id,qty},
-                headers: {"X-CSRF-TOKEN" : $('meta[name="csrf-token"]').attr('content')},
-                success: function(response) {
-                    console.log(response);
-                    $(".cart-price").text('₹'+response.cart.totalPrice);
-                    $("#totalqty").text(response.cart.totalQty);
-                    $("#subtotal").text('₹'+response.cart.totalPrice);
-                    $("#carttotal").text('₹'+response.cart.totalPrice);
-                    $("#priceintoqty-"+id).text('₹'+response.item.price);
-                },
-                error: function(reject) {
-                    console.log(reject);
-                }
-            });
+            console.log(qty);
+            if(qty > 1) {
+                $("#image-loader").css("display", "block");
+                $.ajax({
+                    url: "{{ route('decrease.cartquantity') }}",
+                    method: "POST",
+                    data: {id,qty},
+                    headers: {"X-CSRF-TOKEN" : $('meta[name="csrf-token"]').attr('content')},
+                    success: function(response) {
+                        console.log(response);
+                        $(".cart-price").text('₹'+response.cart.totalPrice);
+                        $("#totalqty").text(response.cart.totalQty);
+                        $("#subtotal").text('₹'+response.cart.totalPrice);
+                        $("#carttotal").text('₹'+response.cart.totalPrice);
+                        $("#priceintoqty-"+id).text('₹'+response.item.price);
+                        $("#image-loader").css("display", "none");
+                    },
+                    error: function(reject) {
+                        $("#image-loader").css("display", "none");
+                        console.log(reject);
+                    }
+                });
+            } else {
+                return false;
+            }
         }
 
         qtyIncrease = (id) => {
             let qty;
             qty = Number($("#qtyTotal").val());
-            console.log(qty);
+            $("#image-loader").css("display", "block");
             $.ajax({
                 url: "{{ route('increase.cartquantity') }}",
                 method: "POST",
                 data: {id,qty},
                 headers: {"X-CSRF-TOKEN" : $('meta[name="csrf-token"]').attr('content')},
                 success: function(response) {
-                    console.log(response);
                     $(".cart-price").text('₹'+response.cart.totalPrice);
                     $("#totalqty").text(response.cart.totalQty);
                     $("#subtotal").text('₹'+response.cart.totalPrice);
                     $("#carttotal").text('₹'+response.cart.totalPrice);
                     $("#priceintoqty-"+id).text('₹'+response.item.price);
-
+                    $("#image-loader").css("display", "none");
                 },
                 error: function(reject) {
+                    $("#image-loader").css("display", "none");
                     console.log(reject);
                 }
             });

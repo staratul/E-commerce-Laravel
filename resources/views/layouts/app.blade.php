@@ -4,6 +4,8 @@
 {{-- Include Top Header --}}
 @include('layouts.inc.header_top')
 
+<div id="image-loader" style="display: none"></div>
+
 {{-- Content --}}
 @yield('content')
 

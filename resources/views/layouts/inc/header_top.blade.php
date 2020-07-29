@@ -72,9 +72,9 @@
                     <div class="col-lg-3 text-right col-md-3">
                         <ul class="nav-right">
                             <li class="heart-icon">
-                                <a href="#">
+                                <a href="{{ route('wishlist') }}">
                                     <i class="icon_heart_alt"></i>
-                                    <span>1</span>
+                                    <span id="icon_heart_alt">{{ count(json_decode(Cookie::get('wishlist'), true)) }}</span>
                                 </a>
                             </li>
                             <li class="cart-icon">
@@ -159,3 +159,5 @@
         </div>
     </header>
     <!-- Header End -->
+
+

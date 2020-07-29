@@ -5,24 +5,27 @@ namespace App\Http\Controllers\Frontend\Shoppings;
 use App\User;
 use App\UserDetail;
 use App\Http\Helper;
-use Barryvdh\DomPDF\Facade as PDF;
+use App\Classes\Wishlist;
 use Illuminate\Http\Request;
 use App\Models\Frontend\Cart;
 use App\Events\AddToCartEvent;
 use App\Models\Frontend\Order;
 use Nexmo\Laravel\Facade\Nexmo;
 use App\Events\OrderShippedEvent;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Frontend\ShoppingCart;
 use App\Models\Admin\Products\Product;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use App\Classes\Wishlist as ClassesWishlist;
 use App\Http\Requests\UserDetailStoreRequest;
-use App\Models\Admin\Products\ProductColorStock;
 use App\Models\Admin\Products\ProductSizeStock;
+use App\Models\Admin\Products\ProductColorStock;
 
 class ShoppingController extends Controller
 {
@@ -217,5 +220,37 @@ class ShoppingController extends Controller
         session()->save();
         // event(new OrderShippedEvent($userDetail, $orders));
         return view('frontend.orders.order_details', compact('userDetail', 'orders'));
+    }
+
+    public function wishlist()
+    {
+        $products = [];
+        $value = Cookie::get('wishlist');
+        $wishlists = json_decode($value, true);
+        foreach($wishlists as $key => $wish) {
+            $products[$key] = Product::with('product_image')
+                                    ->where('id', $wish["product_id"])
+                                    ->first(['id','sub_title','selling_price', 'product_color', 'product_size']);
+        }
+        return view('frontend.pages.wishlist', compact('products', 'wishlists'));
+    }
+
+    public function addToWishlist(Request $request, $type=null)
+    {
+        $value = Cookie::get('wishlist');
+        $value = json_decode($value, true);
+        $wishlist = new Wishlist($value);
+        if($request->isMethod('post')) {
+            if($type === "ADD") {
+                $list = [];
+                $list['ip'] = $request->ip();
+                $list['product_id'] = $request->productId;
+                $wishlist->addToWishlist($list);
+                return response()->json(['status' => true]);
+            } else if($type === "REMOVE") {
+                $wishlist->removeItemFromWishlist($request->productId);
+                return response()->json(['status' => true]);
+            }
+        }
     }
 }

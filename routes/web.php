@@ -47,6 +47,10 @@ Route::get('/luxury-brands', 'Frontend\ProductCategoryController@luxuryBrands');
 // Shopping Cart
 Route::any('add-cart', 'Frontend\Shoppings\ShoppingController@addToCart')
         ->name('addcart');
+Route::post('product-wishlist/{type}', 'Frontend\Shoppings\ShoppingController@addToWishlist')
+        ->name('wishlist');
+Route::get('wishlist', 'Frontend\Shoppings\ShoppingController@wishlist')
+        ->name('wishlist');
 Route::any('add-cart-notifications/{cart}', 'Frontend\Shoppings\ShoppingController@cartNotifications')
         ->name('cart.notifications');
 Route::post('/remove-cart-item', 'Frontend\Shoppings\ShoppingController@removeCartItem')

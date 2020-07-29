@@ -9,8 +9,9 @@ use App\Models\Admin\HomeSlider;
 use App\Models\Admin\SubCategory;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Products\Product;
-use App\Models\Admin\Products\ProductColor;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
+use App\Models\Admin\Products\ProductColor;
 
 class PageController extends Controller
 {
@@ -22,7 +23,9 @@ class PageController extends Controller
                             ->with('sub_category')
                             ->get();
         $homeSliders = HomeSlider::with('image')->with('category')->latest()->get();
-        return view('welcome', compact('homeSliders', 'products'));
+        $value = Cookie::get('wishlist');
+        $wishlists = json_decode($value, true);
+        return view('welcome', compact('homeSliders', 'products', 'wishlists'));
     }
 
     public function contact()
@@ -58,8 +61,9 @@ class PageController extends Controller
         $relatedProducts = Product::where('category_id', $product->category_id)
                                 ->where('id', '!=', $product->id)
                                 ->with('sub_category')->with('product_image')->get();
-        // dd($relatedProducts);
-        return view('frontend.pages.product_details', compact('product', 'relatedProducts'));
+        $value = Cookie::get('wishlist');
+        $wishlists = json_decode($value, true);
+        return view('frontend.pages.product_details', compact('product','relatedProducts','wishlists'));
     }
 
     public function productList($category,$category_id,$subCategory,$subCategory_id)
@@ -81,7 +85,9 @@ class PageController extends Controller
                             ->with('product_image')
                             ->with('sub_category')
                             ->get();
-        return view('frontend.pages.shop', compact('products'));
+        $value = Cookie::get('wishlist');
+        $wishlists = json_decode($value, true);
+        return view('frontend.pages.shop', compact('products', 'wishlists'));
     }
 
     public function shoppingCart()

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Admin\Menu;
 use App\Models\Admin\Category;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\ServiceProvider;
 
 class GlobalServiceProvider extends ServiceProvider
@@ -51,7 +52,6 @@ class GlobalServiceProvider extends ServiceProvider
             ->orderBy('categories.created_at')
             ->get();
         view()->share('categories', $categories);
-
         return $categories;
     }
 }

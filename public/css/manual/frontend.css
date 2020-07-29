@@ -1,0 +1,72 @@
+.addToCart {
+    background: #333333 none repeat scroll 0 0;
+    border-radius: 5px;
+    color: #ffffff;
+    display: inline-block;
+    font-size: 14px;
+    height: 41px;
+    line-height: 40px;
+    padding: 0 50px;
+    text-transform: capitalize;
+    -webkit-transition: all 0.3s ease-in-out 0s;
+    transition: all 0.3s ease-in-out 0s;
+    width: 180px;
+    text-decoration: none;
+}
+.view .mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.view .mask {
+    background-attachment: fixed;
+    bottom: 0;
+}
+.rgba-black-slight, .rgba-black-slight:after {
+    background-color: rgba(0,0,0,.1);
+}
+.waves-effect {
+    cursor: pointer;
+    user-select: none;
+}
+.zoom img, .zoom video {
+    transition: all .2s linear;
+}
+.view img, .view video {
+    position: relative;
+    display: block;
+}
+.overlay .mask {
+    opacity: 0;
+    transition: all .4s ease-in-out;
+}
+.skin-light .rating {
+    color: #4f4f4f;
+}
+.rating {
+    padding: 0;
+    color: #ffa000;
+    list-style-type: none;
+}
+.rating li, .side-nav .social li {
+    display: inline-block;
+}
+.skin-light .text-primary {
+    color: #1266f1 !important;
+}
+.view {
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+}
+.zoom img, .zoom video {
+    transition: all .2s linear;
+}
+.view img, .view video {
+    position: relative;
+    display: block;
+}

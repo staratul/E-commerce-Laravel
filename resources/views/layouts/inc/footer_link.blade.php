@@ -29,6 +29,27 @@
         $('.alert-danger').fadeIn().delay(5000).fadeOut();
         $('.alert-success').fadeIn().delay(5000).fadeOut();
     });
+
+    getTotalWishlistRemove = () => {
+        let count = 0;
+        count = Number($("#icon_heart_alt").text());
+        if(count) {
+            $("#icon_heart_alt").text(--count);
+        } else {
+            count = "{{ count(json_decode(Cookie::get('wishlist'), true)) }}";
+            $("#icon_heart_alt").text(--count);
+        }
+    }
+    getTotalWishlistAdd = () => {
+        let count = 0;
+        count = Number($("#icon_heart_alt").text());
+        if(count) {
+            $("#icon_heart_alt").text(++count);
+        } else {
+            count = "{{ count(json_decode(Cookie::get('wishlist'), true)) }}";
+            $("#icon_heart_alt").text(++count);
+        }
+    }
 </script>
 @stack('js')
 </body>

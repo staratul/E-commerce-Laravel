@@ -3,7 +3,6 @@
 @section('content')
     {{-- Include Banner --}}
     @include('layouts.inc.home_banner')
-
     {{-- Include Banner --}}
     @include('layouts.inc.banner')
 

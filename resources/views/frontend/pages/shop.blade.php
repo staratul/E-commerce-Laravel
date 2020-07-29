@@ -49,11 +49,22 @@
                                     <div class="col-lg-4 col-sm-6">
                                         <div class="product-item">
                                             <div class="pi-pic">
-                                                <img src="{{ asset($product->product_image->product_image_url) }}" alt="">
+                                                <img src="{{ asset($product->product_image->product_image_url) }}" alt="" style="z-index: initial;">
                                                 <div class="sale">Sale</div>
-                                                <div class="icon">
-                                                    <i class="icon_heart_alt"></i>
-                                                </div>
+                                                @php $count = 0; @endphp
+                                                @foreach ($wishlists as $wish)
+                                                    @if((int)$wish["product_id"] == $product->id)
+                                                     @php $count = 1; @endphp
+                                                        <div class="icon" onclick="addToWishlist({{$product->id}})">
+                                                            <i class="fa fa-heart text-danger heart_icon_{{$product->id}}" aria-hidden="true"></i>
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                                @if($count === 0)
+                                                    <div class="icon" onclick="addToWishlist({{$product->id}})">
+                                                        <i class="fa fa-heart-o heart_icon_{{$product->id}}" aria-hidden="true"></i>
+                                                    </div>
+                                                @endif
                                                 <ul>
                                                     <li class="w-icon active"><a href="javascript:;" onclick="addToCart({{$product->id}},1,'{{ $product->product_color}}','{{ $product->product_size}}')"><i class="icon_bag_alt"></i></a></li>
                                                     <li class="quick-view">
