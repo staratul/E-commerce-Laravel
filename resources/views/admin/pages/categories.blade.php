@@ -121,7 +121,8 @@
                 url: "{{ route('admin.categories') }}",
                 method: "POST",
                 data: formData,
-                cache:false,
+                dataType: "json",
+                cache: false,
                 contentType: false,
                 processData: false,
                 success: function(response) {
@@ -138,8 +139,7 @@
                     $("#category_form_submit").removeAttr("disabled")
                 },
                 error: function(reject) {
-                    $.each(reject.responseJSON.errors, function (key, item)
-                    {
+                    $.each(reject.responseJSON.errors, function (key, item) {
                         toastr.error(item);
                     });
                     $("#loader").css("display", "none")

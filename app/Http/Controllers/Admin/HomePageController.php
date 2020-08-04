@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Admin\Category;
+use Illuminate\Validation\Rule;
+use App\Models\Admin\DealOfWeek;
+use App\Models\Admin\HomeSlider;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Frontend\PaymentType;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\HomeSliderRequest;
-use App\Models\Admin\HomeSlider;
-use Illuminate\Validation\Rule;
-use App\Models\Frontend\PaymentType;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 use App\Repositories\Interfaces\HomeSliderRepositoryInterface;
 
 class HomePageController extends Controller
@@ -171,5 +176,152 @@ class HomePageController extends Controller
                 ], 200);
             }
         }
+    }
+
+    public function weekDealData(Request $request)
+    {
+        if($request->isMethod('get') && $request->ajax()) {
+            $weekdeals = DealOfWeek::with('category')->with('image')->latest()->get();
+            return response()->json($weekdeals);
+        }
+        return back();
+    }
+
+    public function weekDeal(Request $request)
+    {
+        $categories = Category::with('tag')
+                                ->orderBy('category')
+                                ->get();
+        if($request->isMethod('get')) {
+            return view('admin.pages.weekdeal', compact('categories'));
+        } else if ($request->isMethod('post')) {
+            $rules = [
+                'category_id' => 'required',
+                'deal_type' => 'required',
+                'deal_on' => 'required',
+                'price' => 'required',
+                'image' => 'sometimes|required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ];
+            
+            $validator = Validator::make($request->all(), $rules);
+            
+            if($validator->fails()) {
+                return response()->json(['errors' => $validator->getMessageBag()], 400);
+            }
+            try {
+                if(isset($request->weekdeal_id)) {
+                    DB::beginTransaction();
+                    $weekdeal = DealOfWeek::where('id', $request->weekdeal_id)->update([
+                        'category_id' => $request->category_id,
+                        'deal_type' => $request->deal_type,
+                        'deal_on' => $request->deal_on,
+                        'price' => $request->price,
+                        'content' => $request->content
+                    ]);
+    
+                    if(isset($request->image)) {
+                        $path = 'uploads/admin/weekdeal/';
+                        $dealImage = DealOfWeek::where('id', $request->weekdeal_id)->with('image')->first();
+                        if(isset($dealImage->image)){
+                            if(File::exists($path.$dealImage->image->name)) {
+                                File::delete($path.$dealImage->image->name);
+                            }
+                        }
+                        $file = $request->image;
+                        $image = Image::make($file);
+                        $image = $image->resize(1769, 569);
+                        $imageName = Str::slug($request->deal_on.$request->deal_type).time().$file->getClientOriginalName();
+                        $image->save($path.$imageName);
+                        $dealImage->image()->update([
+                            'url' => env('APP_URL') . '/' .$path.$imageName,
+                            'name' => $imageName
+                        ]);
+                    }
+                    DB::commit();
+                    return response()->json(['msg' => "Deal Updated Successfully."]);
+                }
+            } catch(\Exception $e) {
+                DB::rollback();
+                dd($e->getMessage());
+            }
+
+            DB::beginTransaction();
+            try {
+                $weekdeal = DealOfWeek::create([
+                    'category_id' => $request->category_id,
+                    'deal_type' => $request->deal_type,
+                    'deal_on' => $request->deal_on,
+                    'price' => $request->price,
+                    'content' => $request->content
+                ]);
+
+                if(isset($request->image)) {
+                    $path = 'uploads/admin/weekdeal/';
+                    $file = $request->image;
+                    $image = Image::make($file);
+                    $image = $image->resize(1769, 569);
+                    $imageName = Str::slug($request->deal_on.$request->deal_type).time().$file->getClientOriginalName();
+                    $image->save($path.$imageName);
+                    $weekdeal->image()->create([
+                        'url' => env('APP_URL') . '/' .$path.$imageName,
+                        'name' => $imageName
+                    ]);
+                } else {
+                    $weekdeal->image()->create([
+                        'url' => "http://localhost:8000/uploads/admin/weekdeal/tshirtw1596075823time-bg.jpg",
+                        'name' => "No Image"
+                    ]);
+                }
+                DB::commit();
+                return response()->json(['data' => $weekdeal, 'msg' => 'Deal Added Successfully.']);
+            } catch(\Exception $e) {
+                DB::rollback();
+                dd($e->getMessage());
+            }
+        }
+    }
+
+    public function editWeekdeal(DealOfWeek $dealOfWeek)
+    {
+        return response()->json($dealOfWeek);
+    }
+
+    public function activeWeekdeal(Request $request, DealOfWeek $dealOfWeek)
+    {
+        if($request->status == 0) {
+            $toDate = "";
+            if($dealOfWeek->deal_type === "D") {
+                $toDate = new \DateTime("+1 day");
+            } else if($dealOfWeek->deal_type === "M") {
+                $toDate = new \DateTime("+30 day");
+            } else if ($dealOfWeek->deal_type === "W") {
+                $toDate = new \DateTime("+7 day");
+            }
+            $dealOfWeek->active = 1;
+            $dealOfWeek->from_date = now();
+            $dealOfWeek->to_date = $toDate;
+            $dealOfWeek->save();
+    
+            DealOfWeek::where('id', '!=', $dealOfWeek->id)->update([
+                'active' => 0
+            ]);
+        } else {
+            $dealOfWeek->active = 0;
+            $dealOfWeek->save();
+        }
+
+        return response()->json(['msg' => 'Deal Active!']);
+    }
+
+    public function weekdealExpired()
+    {
+        $count = DealOfWeek::where('active', 1)->count();
+        if($count == 1) {
+            dd($count);
+            DealOfWeek::where('active', 1)->update([
+                'active' => 0
+            ]);
+        }
+        return response()->json(['msg' => "Deal Expired!"]);
     }
 }

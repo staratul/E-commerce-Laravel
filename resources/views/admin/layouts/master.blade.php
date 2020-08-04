@@ -163,6 +163,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <p>Tags</p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a href="{{ route('admin.weekdeal') }}" class="nav-link @if(Route::currentRouteName() === 'admin.weekdeal') active @endif">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Week Deal</p>
+                  </a>
+                </li>
               </ul>
             </li>
             <li class="nav-item has-treeview @if(Route::currentRouteName() === 'products.index' || Route::currentRouteName() === 'products.create' || Route::currentRouteName() === 'products.size' || Route::currentRouteName() === 'products.color') menu-open @endif">

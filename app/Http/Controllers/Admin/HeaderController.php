@@ -45,7 +45,7 @@ class HeaderController extends Controller
         } else if($request->isMethod('get')) {
             return view('admin.pages.categories');
         }else if($request->isMethod('post')) {
-            // try {
+            try {
                 if(isset($request->categories_id) && $request->categories_id > 0) {
                     $rules = [
                         'category' => [
@@ -86,9 +86,9 @@ class HeaderController extends Controller
                             $insertedSubCategory = SubCategory::create([
                                 'category_id' => $request->categories_id,
                                 'sub_category' => $subCategory,
-                                'sub_category_url' => $request->category.'-'.Str::slug($request->sub_category_url[$key])
+                                'sub_category_url' => Str::slug($request->sub_category_url[$key])
                             ]);
-                            if($request->file('images')) {
+                            if($request->file('images') && isset($request->images[$key])) {
                                 if(isset($imagePublicPath[$key])){
                                     if(File::exists($imagePublicPath[$key])) {
                                         File::delete($imagePublicPath[$key]);
@@ -99,7 +99,7 @@ class HeaderController extends Controller
                                     $image = Image::make($file);
                                     $path = 'uploads/admin/image/';
                                     $image = $image->resize(270, 303);
-                                    $imagename = $request->sub_category[$key].time().$file->getClientOriginalName();
+                                    $imagename = Str::slug($request->sub_category[$key]).time().$file->getClientOriginalName();
                                     $image->save($path.$imagename);
                                     $insertedSubCategory->image()->create([
                                        'url' => env('APP_URL').'/'.$path.$imagename,
@@ -116,7 +116,7 @@ class HeaderController extends Controller
                             }
                         }
                     }
-
+                    // dd($imagePublicPath);
                     return response()->json([
                         'success' => true,
                         'msg' => 'Category Updated successfully'
@@ -134,7 +134,7 @@ class HeaderController extends Controller
                         $subCategory = SubCategory::create([
                             'category_id' => $category->id,
                             'sub_category' => $subCategory,
-                            'sub_category_url' => $request->category.'-'.Str::slug($request->sub_category_url[$key])
+                            'sub_category_url' => Str::slug($request->category).'-'.Str::slug($request->sub_category_url[$key])
                         ]);
                         if($request->file('images')) {
                              if(isset($request->file('images')[$key])) {
@@ -142,7 +142,7 @@ class HeaderController extends Controller
                                  $image = Image::make($file);
                                  $path = 'uploads/admin/image/';
                                  $image = $image->resize(270, 303);
-                                 $imagename = $request->sub_category[$key].time().$file->getClientOriginalName();
+                                 $imagename = Str::slug($request->sub_category[$key]).time().$file->getClientOriginalName();
                                  $image->save($path.$imagename);
                                 $subCategory->image()->create([
                                     'url' => env('APP_URL').'/'.$path.$imagename,
@@ -158,9 +158,9 @@ class HeaderController extends Controller
                     'msg' => 'Category Added successfully'
                 ], 201);
 
-            // } catch(\Exception $e) {
-            //     return response()->json(['Error' => $e->getMessage()]);
-            // }
+            } catch(\Exception $e) {
+                return response()->json(['Error' => $e->getMessage()]);
+            }
         } else if($request->isMethod('delete')) {
             if(isset($request->category_id) && $request->category_id > 0) {
                 $subcategories = SubCategory::where('category_id', $request->category_id)->get();

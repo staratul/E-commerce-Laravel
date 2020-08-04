@@ -25,8 +25,21 @@ class Helper
         return $variable;
     }
 
-    static function slug($text)
-    {
+    static function slug($text) {
         return Str::slug($text);
+    }
+
+    static function dealType($deal) {
+        switch($deal) {
+            case "D":
+                return "Day";
+                break;
+            case "M":
+                return "Month";
+                break;
+            case "W":
+                return "Week";
+                break;
+        }
     }
 }

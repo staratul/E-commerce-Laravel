@@ -26,6 +26,8 @@ Route::get('/contact', 'Frontend\PageController@contact');
 Route::get('/blog-details', 'Frontend\PageController@blogDetails');
 Route::get('/blog', 'Frontend\PageController@blog');
 Route::get('/faq', 'Frontend\PageController@faq');
+Route::get('weekdeal-expired', 'Admin\HomePageController@weekdealExpired')
+        ->name('weekdeal.expired');
 
 // Product
 Route::get('/product-details/{product}/{slug}', 'Frontend\PageController@productDetails')
@@ -153,5 +155,13 @@ Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
     Route::get('users', 'Admin\UserManageController@userList')->name('user.list');
     Route::post('users-store', 'Admin\UserManageController@userStore')->name('users.store');
     Route::get('users-edit/{user}', 'Admin\UserManageController@userEdit')->name('users.edit');
+
+    // Week Deal
+    Route::any('week-deal', 'Admin\HomePageController@weekDeal')->name('admin.weekdeal');
+    Route::get('week-deal-data', 'Admin\HomePageController@weekDealData')->name('admin.weekdeal.data');
+    Route::get('edit-week-deal/{dealOfWeek}', 'Admin\HomePageController@editWeekdeal')
+        ->name('admin.weekdeal.edit');
+    Route::get('active-week-deal/{dealOfWeek}', 'Admin\HomePageController@activeWeekdeal')
+        ->name('admin.weekdeal.active');
 });
 

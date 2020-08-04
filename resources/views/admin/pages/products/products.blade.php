@@ -22,6 +22,7 @@
 
       <!-- Main content -->
       <div class="content">
+        @include('common.messages')
         <div class="container-fluid">
           <div class="row">
             <a type="button" class="btn btn-light ml-2 py-2" href="{{ route('products.create') }}"><i class="fas fa-plus mr-1"></i>Add</a>

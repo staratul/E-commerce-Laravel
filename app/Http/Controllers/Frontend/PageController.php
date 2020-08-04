@@ -8,6 +8,7 @@ use App\Models\Admin\Category;
 use App\Models\Admin\HomeSlider;
 use App\Models\Admin\SubCategory;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\DealOfWeek;
 use App\Models\Admin\Products\Product;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
@@ -25,7 +26,8 @@ class PageController extends Controller
         $homeSliders = HomeSlider::with('image')->with('category')->latest()->get();
         $value = Cookie::get('wishlist');
         $wishlists = json_decode($value, true);
-        return view('welcome', compact('homeSliders', 'products', 'wishlists'));
+        $weekdeal = DealOfWeek::with('image')->where('active', 1)->first();
+        return view('welcome', compact('homeSliders', 'products', 'wishlists', 'weekdeal'));
     }
 
     public function contact()

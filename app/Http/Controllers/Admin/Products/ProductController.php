@@ -76,7 +76,7 @@ class ProductController extends Controller
         try {
             $product = $this->product->storeProduct($request->all());
             Session::flash('success', 'Product Added Successfully.');
-            return back();
+            return redirect()->route('products.index');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
@@ -120,7 +120,7 @@ class ProductController extends Controller
     {
         $product = $this->product->updateProduct($product, $request->all());
         Session::flash('success', 'Product Updated Successfully.');
-        return back();
+        return redirect()->route('products.index');
     }
 
     /**
