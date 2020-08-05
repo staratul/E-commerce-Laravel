@@ -128,11 +128,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <li class="nav-item">
+                    <li class="nav-item">
                       <a href="{{ route('admin.home.slider') }}" class="nav-link @if(Route::currentRouteName() === 'admin.home.slider') active @endif">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Home Slider</p>
                       </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.weekdeal') }}" class="nav-link @if(Route::currentRouteName() === 'admin.weekdeal') active @endif">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Week Deal</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.partnerlogo') }}" class="nav-link @if(Route::currentRouteName() === 'admin.partnerlogo') active @endif">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Partner Logo</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('footers.index') }}" class="nav-link @if(Route::currentRouteName() === 'footers.index') active @endif">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Partner Logo</p>
+                        </a>
                     </li>
                 </ul>
             </li>
@@ -161,12 +179,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <a href="{{ route('admin.tags') }}" class="nav-link @if(Route::currentRouteName() === 'admin.tags') active @endif">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Tags</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{{ route('admin.weekdeal') }}" class="nav-link @if(Route::currentRouteName() === 'admin.weekdeal') active @endif">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Week Deal</p>
                   </a>
                 </li>
               </ul>

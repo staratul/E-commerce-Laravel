@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Models\Admin\Menu;
 use App\Models\Admin\Category;
+use App\Models\Admin\Footer;
+use App\Models\Admin\PartnerLogo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\ServiceProvider;
@@ -52,6 +54,13 @@ class GlobalServiceProvider extends ServiceProvider
             ->orderBy('categories.created_at')
             ->get();
         view()->share('categories', $categories);
+
+        $footer = Footer::first();
+        view()->share('footer', $footer);
+
+        $logos = PartnerLogo::where('status', '1')->get();
+        view()->share('logos', $logos);
+
         return $categories;
     }
 }

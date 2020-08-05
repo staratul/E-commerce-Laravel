@@ -14,6 +14,7 @@ use App\Models\Frontend\PaymentType;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\HomeSliderRequest;
+use App\Models\Admin\PartnerLogo;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
@@ -323,5 +324,93 @@ class HomePageController extends Controller
             ]);
         }
         return response()->json(['msg' => "Deal Expired!"]);
+    }
+
+    public function partnerLogoData(Request $request)
+    {
+        if($request->isMethod('get') && $request->ajax()) {
+            $logos = PartnerLogo::latest()->get();
+            return response()->json($logos);
+        }
+        return back();   
+    }
+
+    public function partnerLogo(Request $request)
+    {
+        if($request->isMethod('get')) {
+            return view('admin.pages.partnerlogo');
+        } else if ($request->isMethod('post')) {
+            $rules = [
+                'title' => 'required',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1048'
+            ];
+            
+            $validator = Validator::make($request->all(), $rules);
+            
+            if($validator->fails()) {
+                return response()->json(['errors' => $validator->getMessageBag()], 400);
+            }
+
+            try {
+                if(isset($request->partnerlogo_id)) {
+                    if(isset($request->image)) {
+                        $path = 'uploads/admin/partnerlogo/';
+                        $file = $request->image;
+                        $image = Image::make($file);
+                        $image = $image->resize(137, 44);
+                        $imageName = Str::slug($request->title).time().$file->getClientOriginalName();
+                        $image->save($path.$imageName);
+                    } else {
+                        $imageName = PartnerLogo::where('id', $request->partnerlogo_id)->first()->logo;
+                    }
+
+                    $logo = PartnerLogo::where('id', $request->partnerlogo_id)->update([
+                        'title' => $request->title,
+                        'logo' => $imageName,
+                        'status' => '0'
+                    ]);   
+
+                    return response()->json(['msg' => "Logo Updated Successfully."]);
+                }
+            } catch(\Exception $e) {
+                dd($e->getMessage());
+            }
+
+            try {
+                if(isset($request->image)) {
+                    $path = 'uploads/admin/partnerlogo/';
+                    $file = $request->image;
+                    $image = Image::make($file);
+                    $image = $image->resize(137, 44);
+                    $imageName = Str::slug($request->title).time().$file->getClientOriginalName();
+                    $image->save($path.$imageName);
+
+                    $logo = PartnerLogo::create([
+                        'title' => $request->title,
+                        'logo' => $imageName,
+                        'status' => '0'
+                    ]);
+                } 
+                return response()->json(['data' => $logo, 'msg' => 'Logo Added Successfully.']);
+            } catch(\Exception $e) {
+                dd($e->getMessage());
+            }
+        }
+    }
+
+    public function partnerLogoEdit(PartnerLogo $partnerLogo)
+    {
+        return response()->json($partnerLogo);
+    }
+
+    public function partnerlogoStatus(Request $request, PartnerLogo $partnerLogo)
+    {
+        if($request->status == 0) {
+            $partnerLogo->status = '1';
+        } else {
+            $partnerLogo->status = '0';
+        }
+        $partnerLogo->save();
+        return response()->json(['msg' => 'Status Updated Successfully!']);
     }
 }

@@ -23,6 +23,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/contact', 'Frontend\PageController@contact');
+Route::get('/about-us', 'Frontend\PageController@aboutUs');
 Route::get('/blog-details', 'Frontend\PageController@blogDetails');
 Route::get('/blog', 'Frontend\PageController@blog');
 Route::get('/faq', 'Frontend\PageController@faq');
@@ -163,5 +164,17 @@ Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
         ->name('admin.weekdeal.edit');
     Route::get('active-week-deal/{dealOfWeek}', 'Admin\HomePageController@activeWeekdeal')
         ->name('admin.weekdeal.active');
+
+    // Partner Logo
+    Route::any('partner-logo', 'Admin\HomePageController@partnerLogo')->name('admin.partnerlogo');
+    Route::get('partner-logo-data', 'Admin\HomePageController@partnerLogoData')
+        ->name('partnerlogo.data');
+    Route::get('partner-logo-edit/{partnerLogo}', 'Admin\HomePageController@partnerLogoEdit')
+        ->name('admin.partnerlogo.edit');
+    Route::get('partner-logo-status/{partnerLogo}', 'Admin\HomePageController@partnerlogoStatus')
+        ->name('admin.partnerlogo.status');
+
+    // Manage Footer
+    Route::resource('footers', 'Admin\ManageFooterController');
 });
 

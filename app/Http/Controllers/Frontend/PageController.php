@@ -9,6 +9,8 @@ use App\Models\Admin\HomeSlider;
 use App\Models\Admin\SubCategory;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\DealOfWeek;
+use App\Models\Admin\Footer;
+use App\Models\Admin\PartnerLogo;
 use App\Models\Admin\Products\Product;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
@@ -33,6 +35,11 @@ class PageController extends Controller
     public function contact()
     {
         return view('frontend.pages.contact');
+    }
+
+    public function aboutUs()
+    {
+        return view('frontend.pages.about');
     }
 
     public function blogDetails()

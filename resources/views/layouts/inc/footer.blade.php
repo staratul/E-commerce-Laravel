@@ -8,15 +8,17 @@
                             <a href="#"><img src="{{ asset('img/footer-logo.png') }}" alt=""></a>
                         </div>
                         <ul>
-                            <li>Address: 60-49 Road 11378 New York</li>
-                            <li>Phone: +65 11.188.888</li>
-                            <li>Email: hello.colorlib@gmail.com</li>
+                            <li>Address: {!! $footer->address !!}</li>
+                            <li>Phone: + {{ $footer->phone }}</li>
+                            <li>Email: {{ $footer->email }}</li>
                         </ul>
                         <div class="footer-social">
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            @foreach (explode(",", $footer->icons) as $icon)
+                                <a href="#"><i class="{{$icon}}"></i></a>
+                            @endforeach
+                            {{-- <a href="#"><i class="fa fa-instagram"></i></a>
                             <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-pinterest"></i></a>
+                            <a href="#"><i class="fa fa-pinterest"></i></a> --}}
                         </div>
                     </div>
                 </div>
@@ -24,10 +26,13 @@
                     <div class="footer-widget">
                         <h5>Information</h5>
                         <ul>
-                            <li><a href="#">About Us</a></li>
+                            @foreach (explode(",", $footer->information_links) as $link)
+                                <li><a href="{{Str::slug($link)}}">{{$link}}</a></li>
+                            @endforeach
+                            {{-- <li><a href="#">About Us</a></li>
                             <li><a href="#">Checkout</a></li>
                             <li><a href="#">Contact</a></li>
-                            <li><a href="#">Serivius</a></li>
+                            <li><a href="#">Serivius</a></li> --}}
                         </ul>
                     </div>
                 </div>
@@ -35,17 +40,20 @@
                     <div class="footer-widget">
                         <h5>My Account</h5>
                         <ul>
-                            <li><a href="#">My Account</a></li>
+                            @foreach (explode(",", $footer->account_links) as $link)
+                                <li><a href="{{Str::slug($link)}}">{{$link}}</a></li>
+                            @endforeach
+                            {{-- <li><a href="#">My Account</a></li>
                             <li><a href="#">Contact</a></li>
                             <li><a href="#">Shopping Cart</a></li>
-                            <li><a href="#">Shop</a></li>
+                            <li><a href="#">Shop</a></li> --}}
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="newslatter-item">
                         <h5>Join Our Newsletter Now</h5>
-                        <p>Get E-mail updates about our latest shop and special offers.</p>
+                        <p>{!! $footer->newsletter_text !!}</p>
                         <form action="#" class="subscribe-form">
                             <input type="text" placeholder="Enter Your Mail">
                             <button type="button">Subscribe</button>
