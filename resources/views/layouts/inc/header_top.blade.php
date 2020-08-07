@@ -61,13 +61,16 @@
                         </div>
                     </div>
                     <div class="col-lg-7 col-md-7">
-                        <div class="advanced-search">
-                            <button type="button" class="category-btn">All Categories</button>
-                            <div class="input-group">
-                                <input type="text" placeholder="What do you need?">
-                                <button type="button"><i class="ti-search"></i></button>
+                        <form id="product_search_form" method="GET" action="">
+                            @csrf
+                            <div class="advanced-search">
+                                <button type="button" class="category-btn">All Categories</button>
+                                <div class="input-group">
+                                    <input type="text" id="search" name="search" placeholder="What do you need?" autocomplete="off">
+                                    <button type="button"><i class="ti-search"></i></button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                     <div class="col-lg-3 text-right col-md-3">
                         <ul class="nav-right">
@@ -111,13 +114,6 @@
                                     <a href="{{ url('/'.$category->category_url) }}">{{ $category->category }}</a>
                                 </li>
                             @endforeach
-                            {{-- <li class="active"><a href="#">Women’s Clothing</a></li>
-                            <li><a href="#">Men’s Clothing</a></li>
-                            <li><a href="#">Kid's Clothing</a></li>
-                            <li><a href="#">Home & Living</a></li>
-                            <li><a href="#">Accessories</a></li>
-                            <li><a href="#">Essentials</a></li>
-                            <li><a href="#">Luxury Brands</a></li> --}}
                         </ul>
                     </div>
                 </div>
@@ -137,21 +133,6 @@
                                 @endif
                             </li>
                         @endforeach
-                        {{-- <li class="active"><a href="./index.html">Home</a></li>
-                        <li><a href="./shop.html">Shop</a></li>
-                        <li><a href="#">Offers</a></li>
-                        <li><a href="./blog.html">Blog</a></li>
-                        <li><a href="./contact.html">Contact</a></li>
-                        <li><a href="#">Pages</a>
-                            <ul class="dropdown">
-                                <li><a href="./blog-details.html">Blog Details</a></li>
-                                <li><a href="./shopping-cart.html">Shopping Cart</a></li>
-                                <li><a href="./check-out.html">Checkout</a></li>
-                                <li><a href="./faq.html">Faq</a></li>
-                                <li><a href="./register.html">Register</a></li>
-                                <li><a href="{{ route('login') }}">Login</a></li>
-                            </ul>
-                        </li> --}}
                     </ul>
                 </nav>
                 <div id="mobile-menu-wrap"></div>
@@ -160,4 +141,47 @@
     </header>
     <!-- Header End -->
 
+@push('js')
+    <script type="text/javascript">
+        let path = "{{ route('search.suggestion') }}";
 
+        $('#search').typeahead({
+            minLength: 2,
+            source:  function (query, process) {
+            return $.get(path, { query: query }, function (data) {
+                var dataset = [];
+                    data.forEach(function(value){
+                        let val = value.tags.split(',');
+                        val.forEach((val) => {
+                            var el = dataset.find(a =>a.includes(val));
+                            if(!el) {
+                                dataset.push(val);
+                            }
+                        })
+                    });
+                    return process(dataset);
+                });
+            }
+        });
+
+        $("#search").on("change", () => {
+            $("#loader").css("display", "block")
+            let search = $("#search").val();
+            let url = "{{ route('search.result', 'type') }}";
+            url = url.replace("type", search);;
+            $("#product_search_form").attr("action", url);
+            $("#product_search_form").submit();
+        });
+    </script>
+@endpush
+
+@push('css')
+    <style>
+        #loader {
+            display: none; position: fixed; left: 0px; top: 0px; width: 100%; height: 100%;
+            z-index: 9999;
+            background: url('/img/loader3.gif') 50% 50% no-repeat rgb(10,10,10);
+            opacity: .8;
+        }
+    </style>
+@endpush

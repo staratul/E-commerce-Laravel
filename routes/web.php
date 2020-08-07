@@ -30,6 +30,11 @@ Route::get('/faq', 'Frontend\PageController@faq');
 Route::get('weekdeal-expired', 'Admin\HomePageController@weekdealExpired')
         ->name('weekdeal.expired');
 
+// Produt Search
+Route::get('search-suggestion', 'Frontend\PageController@searchSuggestion')->name('search.suggestion');
+Route::get('search-result/{type}', 'Frontend\PageController@searchResult')
+        ->name('search.result');
+
 // Product
 Route::get('/product-details/{product}/{slug}', 'Frontend\PageController@productDetails')
             ->name('product.details');

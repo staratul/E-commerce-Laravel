@@ -53,6 +53,7 @@
             background: url('/img/loader/loader1.gif') 50% 50% no-repeat rgb(10,10,10);
             opacity: .8;
         }
+        .typeahead{min-width: 26rem !important}
     </style>
     @stack('css')
 </head>

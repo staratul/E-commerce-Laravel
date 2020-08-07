@@ -111,4 +111,25 @@ class PageController extends Controller
         $oldCart = Session::has('shoppingcart') ? Session::get('shoppingcart') : null;
         dd("done", $oldCart);
     }
+
+    public function searchSuggestion(Request $request)
+    {
+        $result = Product::select('tags')->where('tags', 'LIKE', "%{$request->input('query')}%")
+                    // ->orWhere('sub_title', 'LIKE', "%{$request->input('query')}%")
+                    // ->orWhere('tags', 'LIKE', "%{$request->input('query')}%")
+                    ->groupBy('tags')
+                    ->get();
+        return response()->json($result);
+    }
+
+    public function searchResult($search)
+    {
+        $products = Product::where('tags', 'LIKE', "%{$search}%")
+                            // ->orWhere('sub_title', 'LIKE', "%{$search}%")
+                            // ->orWhere('tags', 'LIKE', "%{$search}%")
+                            ->get();
+        $value = Cookie::get('wishlist');
+        $wishlists = json_decode($value, true);
+        return view('frontend.pages.searchresult', compact('products', 'wishlists'));
+    }
 }
