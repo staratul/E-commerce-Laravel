@@ -22,7 +22,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/contact', 'Frontend\PageController@contact');
+Route::any('/contact', 'Frontend\PageController@contact')->name('contact');
 Route::get('/about-us', 'Frontend\PageController@aboutUs');
 Route::get('/blog-details', 'Frontend\PageController@blogDetails');
 Route::get('/blog', 'Frontend\PageController@blog');
@@ -181,5 +181,11 @@ Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
 
     // Manage Footer
     Route::resource('footers', 'Admin\ManageFooterController');
+
+    // Contact Messages
+    Route::any('contact-messages', 'Admin\HomePageController@contactMessage')
+        ->name('contact.messages');
+    Route::get('contact-messages-list', 'Admin\HomePageController@contactMessageList')
+        ->name('contact.messages.list');
 });
 

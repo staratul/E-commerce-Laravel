@@ -60,13 +60,13 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-lg-7 col-md-7">
+                    <div class="col-lg-7 col-md-7" style="padding-left: 100px;">
                         <form id="product_search_form" method="GET" action="">
                             @csrf
                             <div class="advanced-search">
-                                <button type="button" class="category-btn">All Categories</button>
+                                {{-- <button type="button" class="category-btn">All Categories</button> --}}
                                 <div class="input-group">
-                                    <input type="text" id="search" name="search" placeholder="What do you need?" autocomplete="off">
+                                    <input type="text" id="search" name="search" placeholder="What do you need?" autocomplete="off" class="text-dark">
                                     <button type="button"><i class="ti-search"></i></button>
                                 </div>
                             </div>

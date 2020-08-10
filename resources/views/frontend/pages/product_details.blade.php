@@ -21,11 +21,8 @@
     <!-- Product Shop Section Begin -->
     <section class="product-shop spad page-details">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    @include('layouts.inc.filter_product')
-                </div>
-                <div class="col-lg-9">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="product-pic-zoom">

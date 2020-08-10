@@ -253,6 +253,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </li>
                 </ul>
             </li>
+            <li class="nav-item has-treeview @if(Route::currentRouteName() === 'contact.messages') menu-open @endif">
+                <a href="#" class="nav-link @if(Route::currentRouteName() === 'contact.messages') active @endif">
+                  <i class="nav-icon fas fa-tachometer-alt"></i>
+                  <p>
+                    Messages
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                      <a href="{{ route('contact.messages') }}" class="nav-link @if(Route::currentRouteName() === 'contact.messages') active @endif">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Contact Message</p>
+                      </a>
+                    </li>
+                </ul>
+            </li>
           </ul>
         </nav>
         <!-- /.sidebar-menu -->

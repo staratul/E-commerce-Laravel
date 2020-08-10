@@ -8,16 +8,20 @@ use App\Models\Admin\Category;
 use Illuminate\Validation\Rule;
 use App\Models\Admin\DealOfWeek;
 use App\Models\Admin\HomeSlider;
+use App\Models\Frontend\Contact;
+use App\Models\Admin\PartnerLogo;
+use App\Models\Admin\ContactReply;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Frontend\PaymentType;
+use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
+use App\Events\NewContactMessageEvent;
+use App\Events\ReplyOfContactMessageEvent;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\HomeSliderRequest;
-use App\Models\Admin\PartnerLogo;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\File;
 use App\Repositories\Interfaces\HomeSliderRepositoryInterface;
 
 class HomePageController extends Controller
@@ -203,9 +207,9 @@ class HomePageController extends Controller
                 'price' => 'required',
                 'image' => 'sometimes|required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ];
-            
+
             $validator = Validator::make($request->all(), $rules);
-            
+
             if($validator->fails()) {
                 return response()->json(['errors' => $validator->getMessageBag()], 400);
             }
@@ -219,7 +223,7 @@ class HomePageController extends Controller
                         'price' => $request->price,
                         'content' => $request->content
                     ]);
-    
+
                     if(isset($request->image)) {
                         $path = 'uploads/admin/weekdeal/';
                         $dealImage = DealOfWeek::where('id', $request->weekdeal_id)->with('image')->first();
@@ -302,7 +306,7 @@ class HomePageController extends Controller
             $dealOfWeek->from_date = now();
             $dealOfWeek->to_date = $toDate;
             $dealOfWeek->save();
-    
+
             DealOfWeek::where('id', '!=', $dealOfWeek->id)->update([
                 'active' => 0
             ]);
@@ -332,7 +336,7 @@ class HomePageController extends Controller
             $logos = PartnerLogo::latest()->get();
             return response()->json($logos);
         }
-        return back();   
+        return back();
     }
 
     public function partnerLogo(Request $request)
@@ -344,9 +348,9 @@ class HomePageController extends Controller
                 'title' => 'required',
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1048'
             ];
-            
+
             $validator = Validator::make($request->all(), $rules);
-            
+
             if($validator->fails()) {
                 return response()->json(['errors' => $validator->getMessageBag()], 400);
             }
@@ -368,7 +372,7 @@ class HomePageController extends Controller
                         'title' => $request->title,
                         'logo' => $imageName,
                         'status' => '0'
-                    ]);   
+                    ]);
 
                     return response()->json(['msg' => "Logo Updated Successfully."]);
                 }
@@ -390,7 +394,7 @@ class HomePageController extends Controller
                         'logo' => $imageName,
                         'status' => '0'
                     ]);
-                } 
+                }
                 return response()->json(['data' => $logo, 'msg' => 'Logo Added Successfully.']);
             } catch(\Exception $e) {
                 dd($e->getMessage());
@@ -412,5 +416,36 @@ class HomePageController extends Controller
         }
         $partnerLogo->save();
         return response()->json(['msg' => 'Status Updated Successfully!']);
+    }
+
+    public function contactMessageList()
+    {
+        $messages = Contact::latest()->get();
+        return response()->json($messages);
+    }
+
+    public function contactMessage(Request $request)
+    {
+        if($request->isMethod('get')) {
+            $notifications = DB::table('notifications')
+                            ->where('type', 'App\Notifications\NewContactMessage')
+                            ->whereNull('read_at')
+                            ->update(['read_at' => now()]);
+            return view('admin.pages.users.contact_messages');
+        } else if($request->isMethod('post')) {
+            $contact = Contact::where('id', $request->contact_message_id)->first();
+
+            $reply = $contact->contact_reply()->create([
+                'reply' => $request->reply
+            ]);
+
+            // $contact->replied = '1';
+            // $contact->replied_date = now();
+            // $contact->save();
+            $user = $request->all();
+            event(new ReplyOfContactMessageEvent($reply, $user));
+
+            return response()->json(['msg' => 'Reply Sended Successfully!']);
+        }
     }
 }

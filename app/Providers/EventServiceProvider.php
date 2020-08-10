@@ -3,10 +3,14 @@
 namespace App\Providers;
 
 use App\Events\AddToCartEvent;
+use App\Events\NewContactMessageEvent;
 use App\Events\OrderShippedEvent;
+use App\Events\ReplyOfContactMessageEvent;
 use App\Events\SendOTPEvent;
 use App\Listeners\AddToCartListener;
+use App\Listeners\NewContactMessageListener;
 use App\Listeners\OrderShippedListener;
+use App\Listeners\ReplyOfContactMessageListener;
 use App\Listeners\SendOTPListener;
 use App\Mail\OrderShipped;
 use Illuminate\Auth\Events\Registered;
@@ -25,11 +29,17 @@ class EventServiceProvider extends ServiceProvider
         AddToCartEvent::class => [
             AddToCartListener::class,
         ],
+        NewContactMessageEvent::class => [
+            NewContactMessageListener::class,
+        ],
         SendOTPEvent::class => [
             SendOTPListener::class,
         ],
         OrderShippedEvent::class => [
             OrderShippedListener::class,
+        ],
+        ReplyOfContactMessageEvent::class => [
+            ReplyOfContactMessageListener::class,
         ]
     ];
 

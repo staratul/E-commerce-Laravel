@@ -27,7 +27,7 @@
                         <h5>Information</h5>
                         <ul>
                             @foreach (explode(",", $footer->information_links) as $link)
-                                <li><a href="{{Str::slug($link)}}">{{$link}}</a></li>
+                                <li><a href="{{ url(Str::slug($link)) }}">{{ $link }}</a></li>
                             @endforeach
                             {{-- <li><a href="#">About Us</a></li>
                             <li><a href="#">Checkout</a></li>
@@ -41,7 +41,7 @@
                         <h5>My Account</h5>
                         <ul>
                             @foreach (explode(",", $footer->account_links) as $link)
-                                <li><a href="{{Str::slug($link)}}">{{$link}}</a></li>
+                                <li><a href="{{ url(Str::slug($link)) }}">{{ $link }}</a></li>
                             @endforeach
                             {{-- <li><a href="#">My Account</a></li>
                             <li><a href="#">Contact</a></li>

@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Events\NewContactMessageEvent;
 use App\Http\Helper;
+use App\Models\Admin\Footer;
 use Illuminate\Http\Request;
 use App\Models\Admin\Category;
+use App\Models\Admin\DealOfWeek;
 use App\Models\Admin\HomeSlider;
+use App\Models\Admin\PartnerLogo;
 use App\Models\Admin\SubCategory;
 use App\Http\Controllers\Controller;
-use App\Models\Admin\DealOfWeek;
-use App\Models\Admin\Footer;
-use App\Models\Admin\PartnerLogo;
 use App\Models\Admin\Products\Product;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\Products\ProductColor;
+use App\Models\Frontend\Contact;
 
 class PageController extends Controller
 {
@@ -32,9 +35,34 @@ class PageController extends Controller
         return view('welcome', compact('homeSliders', 'products', 'wishlists', 'weekdeal'));
     }
 
-    public function contact()
+    public function contact(Request $request)
     {
-        return view('frontend.pages.contact');
+        if($request->isMethod('get')) {
+            return view('frontend.pages.contact');
+        } else if($request->isMethod('post')) {
+            $rules = [
+                'name' => 'required',
+                'email' => 'email|required',
+                'message' => 'required'
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()) {
+                return back()->withErrors($validator)->withInput();
+            }
+
+            $contact = Contact::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'message' => $request->message
+            ]);
+
+            event(new NewContactMessageEvent($contact));
+
+            Session::flash('success', 'Your Message Send Successfully.');
+            return redirect()->route('contact');
+        }
     }
 
     public function aboutUs()
