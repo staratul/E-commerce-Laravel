@@ -21,7 +21,7 @@
                     @guest
                         <a href="{{ route('login') }}" class="login-panel"><i class="fa fa-user"></i>Login</a>
                     @else
-                        <a href="#" id="profile-dropdown" class="login-panel"><i class="fa fa-user"></i>{{ Auth::user()->name }}</a>
+                        <a href="{{ route('home') }}" id="profile-dropdown" class="login-panel"><i class="fa fa-user"></i>{{ Auth::user()->name }}</a>
                         <div class="dropdown-content">
                             <a href="{{ route('logout') }}" class="login-panel"
                             onclick="event.preventDefault();
@@ -77,7 +77,13 @@
                             <li class="heart-icon">
                                 <a href="{{ route('wishlist') }}">
                                     <i class="icon_heart_alt"></i>
-                                    <span id="icon_heart_alt">{{ count(json_decode(Cookie::get('wishlist'), true)) }}</span>
+                                    <span id="icon_heart_alt">
+                                        @if (Cookie::get('wishlist') !== null)
+                                            {{ count(json_decode(Cookie::get('wishlist'), true)) }}
+                                        @else
+                                            0
+                                        @endif
+                                    </span>
                                 </a>
                             </li>
                             <li class="cart-icon">

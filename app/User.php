@@ -2,10 +2,11 @@
 
 namespace App;
 
+use App\UserDetail;
 use App\Http\Helper;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -61,5 +62,10 @@ class User extends Authenticatable
         }
 
         return $userArr;
+    }
+
+    public function user_detail()
+    {
+        return $this->hasOne(UserDetail::class);
     }
 }

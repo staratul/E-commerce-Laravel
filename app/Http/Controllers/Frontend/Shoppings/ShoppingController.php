@@ -121,7 +121,13 @@ class ShoppingController extends Controller
     {
         $products = Session::has('shoppingcart') ? Session::get('shoppingcart') : null;
         if(Session::has('shoppingcart') && count($products->items) > 0) {
-            return view('frontend.pages.check-out', compact('products'));
+            $user = [];
+            if(Auth::check()) {
+                $user = auth()->user();
+                $user->user_detail = $user->user_detail;
+                // dd($user);   
+            }
+            return view('frontend.pages.check-out', compact('products','user'));
         } else {
             return back();
         }
@@ -135,17 +141,34 @@ class ShoppingController extends Controller
             $request->is_register = '0';
         }
 
-        $userDetail = UserDetail::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'address1' => $request->address1,
-            'address2' => $request->address2,
-            'pincode' => $request->pincode,
-            'city' => $request->city,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'is_register' => $request->is_register
-        ]);
+        $isUser = UserDetail::where('email', $request->email)->get();
+        if(count($isUser) > 0) {
+            UserDetail::where('email', $request->email)->update([
+                'first_name' => $request->first_name,
+                // 'last_name' => $request->last_name,
+                'address1' => $request->address1,
+                // 'address2' => $request->address2,
+                'pincode' => $request->pincode,
+                'city' => $request->city,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'is_register' => $request->is_register
+            ]);
+
+            $userDetail = UserDetail::where('id', $isUser[0]->id)->first();
+        } else {
+            $userDetail = UserDetail::create([
+                'first_name' => $request->first_name,
+                // 'last_name' => $request->last_name,
+                'address1' => $request->address1,
+                // 'address2' => $request->address2,
+                'pincode' => $request->pincode,
+                'city' => $request->city,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'is_register' => $request->is_register
+            ]);
+        }
 
         if($request->is_register == "1") {
             $user = User::where('email', $userDetail->email)->first();
@@ -159,7 +182,7 @@ class ShoppingController extends Controller
                 UserDetail::where('id', $userDetail->id)->update(['user_id' => $user->id]);
             }
         }
-
+        
         $user_id = null;
         if(isset($user)) {
             $user_id = $user->id;

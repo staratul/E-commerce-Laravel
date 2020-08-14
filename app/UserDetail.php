@@ -13,12 +13,13 @@ class UserDetail extends Model
                 'first_name',
                 'last_name',
                 'address1',
-                'address2',
+                // 'address2',
                 'pincode',
                 'city',
                 'email',
                 'phone',
-                'is_register'];
+                'is_register',
+                'user_id'];
 
     public function o_t_p_verifications()
     {

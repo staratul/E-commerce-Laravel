@@ -38,7 +38,7 @@
         if(count) {
             $("#icon_heart_alt").text(--count);
         } else {
-            count = "{{ count(json_decode(Cookie::get('wishlist'), true)) }}";
+            count = "@if (Cookie::get('wishlist') !== null) {{ count(json_decode(Cookie::get('wishlist'), true)) }} @else 0 @endif";
             $("#icon_heart_alt").text(--count);
         }
     }
@@ -48,7 +48,7 @@
         if(count) {
             $("#icon_heart_alt").text(++count);
         } else {
-            count = "{{ count(json_decode(Cookie::get('wishlist'), true)) }}";
+            count = "@if (Cookie::get('wishlist') !== null) {{ count(json_decode(Cookie::get('wishlist'), true)) }} @else 0 @endif";
             $("#icon_heart_alt").text(++count);
         }
     }

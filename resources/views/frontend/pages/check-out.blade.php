@@ -26,39 +26,44 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="checkout-content">
-                            <a href="{{ route('login') }}" class="content-btn">Click Here To Login</a>
+                            @guest
+                                <a href="{{ route('login') }}" class="content-btn">Click Here To Login</a>
+                            @else
+                                <span class="content-btn">Hello, {{ $user->name }}</span>
+                            @endguest
                         </div>
                         <h4>Biiling Details</h4>
                         <div class="row">
-                            <div class="col-lg-6">
-                                <label for="first_name">Name<span>*</span></label>
-                                <input type="text" id="first_name" name="first_name" placeholder="First Name" required>
+                            <div class="col-lg-12">
+                                <label for="first_name">Full Name<span>*</span></label>
+                                <input type="text" id="first_name" name="first_name" placeholder="First Name" required value="{{ $user->name ?? "" }}">
                             </div>
-                            <div class="col-lg-6">
+                            {{-- <div class="col-lg-6">
                                 <label for="last_name">Name<span>*</span></label>
                                 <input type="text" id="last_name" name="last_name" placeholder="Last Name" required>
-                            </div>
+                            </div> --}}
                             <div class="col-lg-12">
                                 <label for="address1">Address<span>*</span></label>
-                                <input type="text" name="address1" id="address1" class="address1" placeholder="Address(House No, Building, Street)" required>
-                                <input type="text" name="address2" id="address2" placeholder="Address(Area)" required>
+                                <input type="text" name="address1" id="address1" class="address1" placeholder="Address(House No, Building, Street, Area)" required value="{{ isset($user->user_detail) ? $user->user_detail->address1 : "" }}">
+                                {{-- <input type="text" name="address2" id="address2" placeholder="Address(Area)" required> --}}
                             </div>
                             <div class="col-lg-12">
                                 <label for="pincode">Pin Code</label>
-                                <input type="text" id="pincode" name="pincode" placeholder="Pin Code" required>
+                                <input type="text" id="pincode" name="pincode" placeholder="Pin Code" required value="{{ isset($user->user_detail) ? $user->user_detail->pincode : "" }}">
                             </div>
                             <div class="col-lg-12">
                                 <label for="city">Town / City<span>*</span></label>
-                                <input type="text" id="city" name="city" placeholder="Town / City" required>
+                                <input type="text" id="city" name="city" placeholder="Town / City" required value="{{ isset($user->user_detail) ? $user->user_detail->city : "" }}">
                             </div>
                             <div class="col-lg-6">
                                 <label for="email">Email Address<span>*</span></label>
-                                <input type="email" id="email" name="email" placeholder="Email Address" required>
+                                <input type="email" id="email" name="email" placeholder="Email Address" required value="{{ $user->email ?? "" }}">
                             </div>
                             <div class="col-lg-6">
                                 <label for="phone">Phone<span>*</span></label>
-                                <input type="number" name="phone"  id="phone" placeholder="Phone" required>
+                                <input type="number" name="phone"  id="phone" placeholder="Phone" required value="{{ $user->phone ?? "" }}">
                             </div>
+                            @guest
                             <div class="col-lg-12">
                                 <div class="create-item">
                                     <label for="acc-create">
@@ -68,6 +73,7 @@
                                     </label>
                                 </div>
                             </div>
+                            @endguest
                         </div>
                     </div>
                     <div class="col-lg-6">

@@ -20,8 +20,6 @@ Route::get('/', 'Frontend\PageController@index');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
 Route::any('/contact', 'Frontend\PageController@contact')->name('contact');
 Route::get('/about-us', 'Frontend\PageController@aboutUs');
 Route::get('/blog-details', 'Frontend\PageController@blogDetails');
@@ -189,3 +187,9 @@ Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
         ->name('contact.messages.list');
 });
 
+
+Route::middleware(['auth'])->prefix('users')->group(function() {
+    Route::get('profile', 'Users\UserProfileController@userProfile')->name('home');
+    Route::post('profile/update/{user}', 'Users\UserProfileController@userProfileUpdate')
+        ->name('profile.update');
+});
