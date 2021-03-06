@@ -8,14 +8,16 @@
                             <a href="#"><img src="{{ asset('img/footer-logo.png') }}" alt=""></a>
                         </div>
                         <ul>
-                            <li>Address: {!! $footer->address !!}</li>
-                            <li>Phone: + {{ $footer->phone }}</li>
-                            <li>Email: {{ $footer->email }}</li>
+                            <li>Address: {!! $footer->address ?? "" !!}</li>
+                            <li>Phone: + {{ $footer->phone ?? "" }}</li>
+                            <li>Email: {{ $footer->email ?? "" }}</li>
                         </ul>
                         <div class="footer-social">
-                            @foreach (explode(",", $footer->icons) as $icon)
-                                <a href="#"><i class="{{$icon}}"></i></a>
-                            @endforeach
+                            @if(isset($footer->icons))
+                                @foreach (explode(",", $footer->icons) as $icon)
+                                    <a href="#"><i class="{{$icon}}"></i></a>
+                                @endforeach
+                            @endif
                             {{-- <a href="#"><i class="fa fa-instagram"></i></a>
                             <a href="#"><i class="fa fa-twitter"></i></a>
                             <a href="#"><i class="fa fa-pinterest"></i></a> --}}
@@ -26,9 +28,11 @@
                     <div class="footer-widget">
                         <h5>Information</h5>
                         <ul>
-                            @foreach (explode(",", $footer->information_links) as $link)
-                                <li><a href="{{ url(Str::slug($link)) }}">{{ $link }}</a></li>
-                            @endforeach
+                            @if(isset($footer->information_links))
+                                @foreach (explode(",", $footer->information_links) as $link)
+                                    <li><a href="{{ url(Str::slug($link)) }}">{{ $link }}</a></li>
+                                @endforeach
+                            @endif
                             {{-- <li><a href="#">About Us</a></li>
                             <li><a href="#">Checkout</a></li>
                             <li><a href="#">Contact</a></li>
@@ -40,9 +44,11 @@
                     <div class="footer-widget">
                         <h5>My Account</h5>
                         <ul>
-                            @foreach (explode(",", $footer->account_links) as $link)
-                                <li><a href="{{ url(Str::slug($link)) }}">{{ $link }}</a></li>
-                            @endforeach
+                            @if(isset($footer->account_links))
+                                @foreach (explode(",", $footer->account_links) as $link)
+                                    <li><a href="{{ url(Str::slug($link)) }}">{{ $link }}</a></li>
+                                @endforeach
+                            @endif
                             {{-- <li><a href="#">My Account</a></li>
                             <li><a href="#">Contact</a></li>
                             <li><a href="#">Shopping Cart</a></li>
@@ -53,7 +59,7 @@
                 <div class="col-lg-4">
                     <div class="newslatter-item">
                         <h5>Join Our Newsletter Now</h5>
-                        <p>{!! $footer->newsletter_text !!}</p>
+                        <p>{!! $footer->newsletter_text ?? "" !!}</p>
                         <form action="#" class="subscribe-form">
                             <input type="text" placeholder="Enter Your Mail">
                             <button type="button">Subscribe</button>

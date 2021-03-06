@@ -125,7 +125,7 @@ class ShoppingController extends Controller
             if(Auth::check()) {
                 $user = auth()->user();
                 $user->user_detail = $user->user_detail;
-                // dd($user);   
+                // dd($user);
             }
             return view('frontend.pages.check-out', compact('products','user'));
         } else {
@@ -182,7 +182,7 @@ class ShoppingController extends Controller
                 UserDetail::where('id', $userDetail->id)->update(['user_id' => $user->id]);
             }
         }
-        
+
         $user_id = null;
         if(isset($user)) {
             $user_id = $user->id;

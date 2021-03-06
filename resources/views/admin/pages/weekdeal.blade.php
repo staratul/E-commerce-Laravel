@@ -61,8 +61,7 @@
                     var d = $.Deferred();
                     $.ajax({
                         url: "{{ route('admin.weekdeal.data') }}",
-                        method: "GET",
-                        data: filter
+                        method: "GET"
                     }).done(function(result) {
                         result = $.grep(result, function(item) {
                             return (!filter.category.category || item.category.category.indexOf(filter.category.category) > -1)

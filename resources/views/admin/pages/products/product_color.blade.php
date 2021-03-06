@@ -59,8 +59,7 @@
                     var d = $.Deferred();
                     $.ajax({
                         url: "{{ route('products.color') }}",
-                        method: "GET",
-                        data: filter
+                        method: "GET"
                     }).done(function(result) {
                         result = $.grep(result, function(item) {
                             return (!filter.color || item.color.indexOf(filter.color) > -1)

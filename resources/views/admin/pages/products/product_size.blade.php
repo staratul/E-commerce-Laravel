@@ -67,8 +67,7 @@
                     var d = $.Deferred();
                     $.ajax({
                         url: "{{ route('products.size') }}",
-                        method: "GET",
-                        data: filter
+                        method: "GET"
                     }).done(function(result) {
                         result = $.grep(result, function(item) {
                             return (!filter.size || item.size.indexOf(filter.size) > -1)

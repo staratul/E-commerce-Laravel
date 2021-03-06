@@ -52,14 +52,16 @@
                                                 <img src="{{ asset($product->product_image->product_image_url) }}" alt="" style="z-index: initial;">
                                                 <div class="sale">Sale</div>
                                                 @php $count = 0; @endphp
-                                                @foreach ($wishlists as $wish)
-                                                    @if((int)$wish["product_id"] == $product->id)
-                                                     @php $count = 1; @endphp
-                                                        <div class="icon" onclick="addToWishlist({{$product->id}})">
-                                                            <i class="fa fa-heart text-danger heart_icon_{{$product->id}}" aria-hidden="true"></i>
-                                                        </div>
-                                                    @endif
-                                                @endforeach
+                                                @if (isset($wishlists))
+                                                    @foreach ($wishlists as $wish)
+                                                        @if((int)$wish["product_id"] == $product->id)
+                                                        @php $count = 1; @endphp
+                                                            <div class="icon" onclick="addToWishlist({{$product->id}})">
+                                                                <i class="fa fa-heart text-danger heart_icon_{{$product->id}}" aria-hidden="true"></i>
+                                                            </div>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
                                                 @if($count === 0)
                                                     <div class="icon" onclick="addToWishlist({{$product->id}})">
                                                         <i class="fa fa-heart-o heart_icon_{{$product->id}}" aria-hidden="true"></i>

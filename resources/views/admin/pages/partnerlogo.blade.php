@@ -81,8 +81,7 @@
                     var d = $.Deferred();
                     $.ajax({
                         url: "{{ route('partnerlogo.data') }}",
-                        method: "GET",
-                        data: filter
+                        method: "GET"
                     }).done(function(result) {
                         result = $.grep(result, function(item) {
                             return (!filter.title || item.title.indexOf(filter.title) > -1)

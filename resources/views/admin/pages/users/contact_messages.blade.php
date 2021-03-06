@@ -82,8 +82,7 @@
                     var d = $.Deferred();
                     $.ajax({
                         url: "{{ route('contact.messages.list') }}",
-                        method: "GET",
-                        data: filter
+                        method: "GET"
                     }).done(function(result) {
                         result = $.grep(result, function(item) {
                             return (!filter.name || item.name.indexOf(filter.name) > -1)

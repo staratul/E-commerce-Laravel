@@ -56,8 +56,7 @@
                     var d = $.Deferred();
                     $.ajax({
                         url: "{{ route('products.brand') }}",
-                        method: "GET",
-                        data: filter
+                        method: "GET"
                     }).done(function(result) {
                         result = $.grep(result, function(item) {
                             return (!filter.brand || item.brand.indexOf(filter.brand) > -1)

@@ -60,9 +60,10 @@
                 loadData: function(filter) {
                     var d = $.Deferred();
                     $.ajax({
-                        url: "{{ route('admin.menus') }}",
+                        url: "{{ route('admin.menus.data') }}",
                         method: "GET",
-                        data: filter
+                        // data: filter,
+                        dataType: "json"
                     }).done(function(result) {
                         result = $.grep(result, function(item) {
                             return (!filter.menu || item.menu.indexOf(filter.menu) > -1)

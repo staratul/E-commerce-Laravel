@@ -21,7 +21,7 @@
                     <div class="product-slider owl-carousel">
                         @if (isset($products))
                             @foreach ($products as $product)
-                                @if ($product->category->category == 'Men’s Clothing')
+                                @if ($product->category->category == "Men's Clothing")
                                     <div class="product-item">
                                         <div class="pi-pic">
                                             <img src="{{ $product->product_image->product_image_url ?? 'public/img/not-available.jpg' }}" alt="" style="z-index: initial;">

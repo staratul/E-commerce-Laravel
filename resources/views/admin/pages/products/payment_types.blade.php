@@ -56,8 +56,7 @@
                     var d = $.Deferred();
                     $.ajax({
                         url: "{{ route('payment.type') }}",
-                        method: "GET",
-                        data: filter
+                        method: "GET"
                     }).done(function(result) {
                         result = $.grep(result, function(item) {
                             return (!filter.payment_type || item.payment_type.indexOf(filter.payment_type) > -1)
@@ -111,7 +110,7 @@
                     $("#payment_type_form").trigger("reset");
                     $("#payment_type_modal").modal("hide");
                     $("#payment_type_id").val(undefined);
-                    $("#modal_title").text("Add payment_type");
+                    $("#modal_title").text("Add Payment Type");
                     $("#payment_type_form_submit").removeAttr("disabled")
                 },
                 error: function(reject) {
@@ -163,7 +162,7 @@
                     $("#payment_type_form").trigger("reset");
                     $("#payment_type_id").val(response.id);
                     $("#payment_type").val(response.payment_type);
-                    $("#modal_title").text("Update payment_type");
+                    $("#modal_title").text("Update Payment Type");
                     $("#payment_type_modal").modal("show");
                 },
                 error: function(reject) {

@@ -26,16 +26,16 @@ Route::get('/blog-details', 'Frontend\PageController@blogDetails');
 Route::get('/blog', 'Frontend\PageController@blog');
 Route::get('/faq', 'Frontend\PageController@faq');
 Route::get('weekdeal-expired', 'Admin\HomePageController@weekdealExpired')
-        ->name('weekdeal.expired');
+    ->name('weekdeal.expired');
 
 // Produt Search
 Route::get('search-suggestion', 'Frontend\PageController@searchSuggestion')->name('search.suggestion');
 Route::get('search-result/{type}', 'Frontend\PageController@searchResult')
-        ->name('search.result');
+    ->name('search.result');
 
 // Product
 Route::get('/product-details/{product}/{slug}', 'Frontend\PageController@productDetails')
-            ->name('product.details');
+    ->name('product.details');
 Route::get('/product-list/{category}/{category_id}/{subCategory}/{subCategory_id}',              'Frontend\PageController@productList')->name('product.list');
 
 Route::get('/shop', 'Frontend\PageController@shop');
@@ -52,42 +52,52 @@ Route::get('/luxury-brands', 'Frontend\ProductCategoryController@luxuryBrands');
 
 // Shopping Cart
 Route::any('add-cart', 'Frontend\Shoppings\ShoppingController@addToCart')
-        ->name('addcart');
+    ->name('addcart');
 Route::post('product-wishlist/{type}', 'Frontend\Shoppings\ShoppingController@addToWishlist')
-        ->name('wishlist');
+    ->name('wishlist');
 Route::get('wishlist', 'Frontend\Shoppings\ShoppingController@wishlist')
-        ->name('wishlist');
+    ->name('wishlist');
 Route::any('add-cart-notifications/{cart}', 'Frontend\Shoppings\ShoppingController@cartNotifications')
-        ->name('cart.notifications');
+    ->name('cart.notifications');
 Route::post('/remove-cart-item', 'Frontend\Shoppings\ShoppingController@removeCartItem')
-        ->name('remove.cartitem');
+    ->name('remove.cartitem');
 Route::post('/decrease-cart-qty', 'Frontend\Shoppings\ShoppingController@decreaseCartQty')
-        ->name('decrease.cartquantity');
+    ->name('decrease.cartquantity');
 Route::post('/increase-cart-qty', 'Frontend\Shoppings\ShoppingController@increaseCartQty')
-        ->name('increase.cartquantity');
+    ->name('increase.cartquantity');
 
-Route::middleware(['isvalid-for-shopping'])->group(function() {
+Route::middleware(['isvalid-for-shopping'])->group(function () {
     Route::any(
-        'otp-verification/{userDetail}/{oTPVerification}', 'Email\EmailVerificationController@otpVerification')->name('otpVerification');
+        'otp-verification/{userDetail}/{oTPVerification}',
+        'Email\EmailVerificationController@otpVerification'
+    )->name('otpVerification');
 });
 
-Route::middleware(['isvalid-for-payment'])->group(function() {
+Route::middleware(['isvalid-for-payment'])->group(function () {
     Route::get(
-        'checkout-payment/{userDetail}', 'Frontend\Shoppings\CheckoutController@getCheckoutPayment')
+        'checkout-payment/{userDetail}',
+        'Frontend\Shoppings\CheckoutController@getCheckoutPayment'
+    )
         ->name('checkout.payemnt');
     Route::post(
-        'checkout-payment/{userDetail}', 'Frontend\Shoppings\CheckoutController@postCheckoutPayment')
+        'checkout-payment/{userDetail}',
+        'Frontend\Shoppings\CheckoutController@postCheckoutPayment'
+    )
         ->name('checkout.payemnt');
     Route::post(
-            'pay-on-delivery/{userDetail}', 'Frontend\Shoppings\CheckoutController@payOnDelivery')
+        'pay-on-delivery/{userDetail}',
+        'Frontend\Shoppings\CheckoutController@payOnDelivery'
+    )
         ->name('pay.on.delivery');
-    Route::any('check-out/payment/{userDetail}/{type}',
-            'Frontend\Shoppings\CheckoutController@upiPaymentChoose')->name('choose.upi.payment');
+    Route::any(
+        'check-out/payment/{userDetail}/{type}',
+        'Frontend\Shoppings\CheckoutController@upiPaymentChoose'
+    )->name('choose.upi.payment');
 
     // Paytm Payment Route
-    Route::get('/initiate/payment/{userDetail}/{typeId}','Frontend\Shoppings\PaytmController@initiate')
+    Route::get('/initiate/payment/{userDetail}/{typeId}', 'Frontend\Shoppings\PaytmController@initiate')
         ->name('initiate.payment');
-    Route::post('/paytm/payment/{userDetail}/{typeId}','Frontend\Shoppings\PaytmController@pay')
+    Route::post('/paytm/payment/{userDetail}/{typeId}', 'Frontend\Shoppings\PaytmController@pay')
         ->name('make.payment');
     Route::post('/payment/status/{userDetail}/{typeId}', 'Frontend\Shoppings\PaytmController@paymentCallback')->name('status.payment');
 
@@ -107,26 +117,29 @@ Route::get('order-details/{userDetail}', 'Frontend\Shoppings\ShoppingController@
 
 // Checkout
 Route::get('/checkout', 'Frontend\Shoppings\ShoppingController@cartCheckOut')
-        ->name('cart.checkout');
+    ->name('cart.checkout');
 Route::post(
-        'checkout-placeorder', 'Frontend\Shoppings\ShoppingController@placeOrder')
-        ->name('checkout.placeorder');
+    'checkout-placeorder',
+    'Frontend\Shoppings\ShoppingController@placeOrder'
+)
+    ->name('checkout.placeorder');
 Route::get('send-otp/{userDetail}', 'Email\EmailVerificationController@sendOTP')
-        ->name('send.OTP');
+    ->name('send.OTP');
 
 
-Route::prefix('/')->group(function() {
-	Route::get('/admin', 'AdminController@admin');
-	Route::get('admin-login', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');
-	Route::post('admin-login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
+Route::prefix('/')->group(function () {
+    Route::get('/admin', 'AdminController@admin');
+    Route::get('admin-login', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');
+    Route::post('admin-login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
 });
 
-Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
+Route::middleware(['auth:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', 'AdminController@index')->name('admin.dashboard');
     // Categories Routes
     Route::any('categories', 'Admin\HeaderController@category')->name('admin.categories');
     // Menues Routes
     Route::any('/menus', 'Admin\HeaderController@menu')->name('admin.menus');
+    Route::get('/menus-data', 'Admin\HeaderController@menuData')->name('admin.menus.data');
     // Tags Route
     Route::any('/tags', 'Admin\HeaderController@tag')->name('admin.tags');
     // Payment Types
@@ -188,7 +201,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->group(function() {
 });
 
 
-Route::middleware(['auth'])->prefix('users')->group(function() {
+Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::get('profile', 'Users\UserProfileController@userProfile')->name('home');
     Route::post('profile/update/{user}', 'Users\UserProfileController@userProfileUpdate')
         ->name('profile.update');

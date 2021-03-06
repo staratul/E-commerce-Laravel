@@ -20,12 +20,12 @@ class HeaderController extends Controller
 {
     public function category(Request $request)
     {
-        if($request->isMethod('get') && $request->ajax()) {
-            if(isset($request->category_id) && $request->category_id) {
-                if(isset($request->status)) {
-                    if($request->status == '0') {
+        if ($request->isMethod('get') && $request->ajax()) {
+            if (isset($request->category_id) && $request->category_id) {
+                if (isset($request->status)) {
+                    if ($request->status == '0') {
                         $request->status = '1';
-                    }else if($request->status == '1') {
+                    } else if ($request->status == '1') {
                         $request->status = '0';
                     }
                     Category::where('id', $request->category_id)->update([
@@ -42,16 +42,16 @@ class HeaderController extends Controller
             }
             $categories = Category::with('sub_categories')->latest()->get();
             return response()->json($categories);
-        } else if($request->isMethod('get')) {
+        } else if ($request->isMethod('get')) {
             return view('admin.pages.categories');
-        }else if($request->isMethod('post')) {
+        } else if ($request->isMethod('post')) {
             try {
-                if(isset($request->categories_id) && $request->categories_id > 0) {
+                if (isset($request->categories_id) && $request->categories_id > 0) {
                     $rules = [
                         'category' => [
-                                        'required',
-                                        Rule::unique('categories')->ignore($request->categories_id),
-                                    ]
+                            'required',
+                            Rule::unique('categories')->ignore($request->categories_id),
+                        ]
                     ];
                 } else {
                     $rules = [
@@ -60,58 +60,59 @@ class HeaderController extends Controller
                 }
 
                 $validator = Validator::make($request->all(), $rules);
-                if($validator->fails()) {
+                if ($validator->fails()) {
                     return response()->json(['errors' => $validator->getMessageBag()], 400);
                 }
-                if(isset($request->categories_id) && $request->categories_id > 0) {
+                if (isset($request->categories_id) && $request->categories_id > 0) {
                     Category::where('id', $request->categories_id)->update([
                         'category' => $request->category,
                         'category_url' => Str::slug($request->category_url)
                     ]);
 
-                    if(isset($request->sub_category)) {
-                        $imagenameArray = []; $imagePublicPath = [];
+                    if (isset($request->sub_category)) {
+                        $imagenameArray = [];
+                        $imagePublicPath = [];
                         $subcategories = SubCategory::where('category_id', $request->categories_id)->get();
-                        if(isset($subcategories)) {
-                            foreach($subcategories as $key => $sub) {
-                                if($sub->image) {
+                        if (isset($subcategories)) {
+                            foreach ($subcategories as $key => $sub) {
+                                if ($sub->image) {
                                     $imagenameArray[] = $sub->image->name;
-                                    $imagePublicPath[] = public_path() . "/uploads/admin/image/".$sub->image->name;
+                                    $imagePublicPath[] = public_path() . "/uploads/admin/image/" . $sub->image->name;
                                     $sub->image->delete();
                                 }
                             }
                         }
                         SubCategory::where('category_id', $request->categories_id)->delete();
-                        foreach($request->sub_category as $key => $subCategory) {
+                        foreach ($request->sub_category as $key => $subCategory) {
                             $insertedSubCategory = SubCategory::create([
                                 'category_id' => $request->categories_id,
                                 'sub_category' => $subCategory,
                                 'sub_category_url' => Str::slug($request->sub_category_url[$key])
                             ]);
-                            if($request->file('images') && isset($request->images[$key])) {
-                                if(isset($imagePublicPath[$key])){
-                                    if(File::exists($imagePublicPath[$key])) {
+                            if ($request->file('images') && isset($request->images[$key])) {
+                                if (isset($imagePublicPath[$key])) {
+                                    if (File::exists($imagePublicPath[$key])) {
                                         File::delete($imagePublicPath[$key]);
                                     }
                                 }
-                                if(isset($request->file('images')[$key])) {
+                                if (isset($request->file('images')[$key])) {
                                     $file = $request->file('images')[$key];
                                     $image = Image::make($file);
                                     $path = 'uploads/admin/image/';
                                     $image = $image->resize(270, 303);
-                                    $imagename = Str::slug($request->sub_category[$key]).time().$file->getClientOriginalName();
-                                    $image->save($path.$imagename);
+                                    $imagename = Str::slug($request->sub_category[$key]) . time() . $file->getClientOriginalName();
+                                    $image->save($path . $imagename);
                                     $insertedSubCategory->image()->create([
-                                       'url' => env('APP_URL').'/'.$path.$imagename,
-                                       'name' => $imagename
+                                        'url' => env('APP_URL') . '/' . $path . $imagename,
+                                        'name' => $imagename
                                     ]);
                                 }
                             } else {
-                                if(isset($imagenameArray[$key])) {
+                                if (isset($imagenameArray[$key])) {
                                     $insertedSubCategory->image()->create([
-                                        'url' => env('APP_URL').'/'.$imagenameArray[$key],
+                                        'url' => env('APP_URL') . '/' . $imagenameArray[$key],
                                         'name' => $imagenameArray[$key]
-                                     ]);
+                                    ]);
                                 }
                             }
                         }
@@ -129,26 +130,26 @@ class HeaderController extends Controller
                     'status' => '0'
                 ]);
 
-                if(isset($request->sub_category)) {
-                    foreach($request->sub_category as $key => $subCategory) {
+                if (isset($request->sub_category)) {
+                    foreach ($request->sub_category as $key => $subCategory) {
                         $subCategory = SubCategory::create([
                             'category_id' => $category->id,
                             'sub_category' => $subCategory,
-                            'sub_category_url' => Str::slug($request->category).'-'.Str::slug($request->sub_category_url[$key])
+                            'sub_category_url' => Str::slug($request->category) . '-' . Str::slug($request->sub_category_url[$key])
                         ]);
-                        if($request->file('images')) {
-                             if(isset($request->file('images')[$key])) {
-                                 $file = $request->file('images')[$key];
-                                 $image = Image::make($file);
-                                 $path = 'uploads/admin/image/';
-                                 $image = $image->resize(270, 303);
-                                 $imagename = Str::slug($request->sub_category[$key]).time().$file->getClientOriginalName();
-                                 $image->save($path.$imagename);
+                        if ($request->file('images')) {
+                            if (isset($request->file('images')[$key])) {
+                                $file = $request->file('images')[$key];
+                                $image = Image::make($file);
+                                $path = 'uploads/admin/image/';
+                                $image = $image->resize(270, 303);
+                                $imagename = Str::slug($request->sub_category[$key]) . time() . $file->getClientOriginalName();
+                                $image->save($path . $imagename);
                                 $subCategory->image()->create([
-                                    'url' => env('APP_URL').'/'.$path.$imagename,
+                                    'url' => env('APP_URL') . '/' . $path . $imagename,
                                     'name' => $imagename
                                 ]);
-                             }
+                            }
                         }
                     }
                 }
@@ -157,17 +158,16 @@ class HeaderController extends Controller
                     'success' => true,
                     'msg' => 'Category Added successfully'
                 ], 201);
-
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 return response()->json(['Error' => $e->getMessage()]);
             }
-        } else if($request->isMethod('delete')) {
-            if(isset($request->category_id) && $request->category_id > 0) {
+        } else if ($request->isMethod('delete')) {
+            if (isset($request->category_id) && $request->category_id > 0) {
                 $subcategories = SubCategory::where('category_id', $request->category_id)->get();
-                foreach($subcategories as $key => $sub) {
-                    if($sub->image) {
-                        $imagePath = public_path() . "/uploads/admin/image/".$sub->image->name;
-                        if(File::exists($imagePath)) {
+                foreach ($subcategories as $key => $sub) {
+                    if ($sub->image) {
+                        $imagePath = public_path() . "/uploads/admin/image/" . $sub->image->name;
+                        if (File::exists($imagePath)) {
                             File::delete($imagePath);
                         }
                         $sub->image->delete();
@@ -186,13 +186,13 @@ class HeaderController extends Controller
 
     public function menu(Request $request)
     {
-        if($request->isMethod('get') && $request->ajax()) {
-            if(isset($request->menu_id) && $request->menu_id) {
+        if ($request->isMethod('get')) {
+            if (isset($request->menu_id) && $request->menu_id) {
                 // Update Status
-                if(isset($request->status)) {
-                    if($request->status == '0') {
+                if (isset($request->status)) {
+                    if ($request->status == '0') {
                         $request->status = '1';
-                    }else if($request->status == '1') {
+                    } else if ($request->status == '1') {
                         $request->status = '0';
                     }
                     Menu::where('id', $request->menu_id)->update([
@@ -208,19 +208,15 @@ class HeaderController extends Controller
                 $menu = Menu::where('id', $request->menu_id)->with('sub_menus')->get(['id', 'menu', 'menu_url']);
                 return response()->json($menu);
             }
-            // Return All Menus
-            $menu = Menu::with('sub_menus')->latest()->get();
-            return response()->json($menu);
-        } else if($request->isMethod('get')) {
             return view('admin.pages.menus');
-        }else if($request->isMethod('post')) {
+        } else if ($request->isMethod('post')) {
             try {
-                if(isset($request->menus_id) && $request->menus_id > 0) {
+                if (isset($request->menus_id) && $request->menus_id > 0) {
                     $rules = [
                         'menu' => [
-                                        'required',
-                                        Rule::unique('menus')->ignore($request->menus_id),
-                                    ]
+                            'required',
+                            Rule::unique('menus')->ignore($request->menus_id),
+                        ]
                     ];
                 } else {
                     $rules = [
@@ -228,18 +224,18 @@ class HeaderController extends Controller
                     ];
                 }
                 $validator = Validator::make($request->all(), $rules);
-                if($validator->fails()) {
+                if ($validator->fails()) {
                     return response()->json(['errors' => $validator->getMessageBag()], 400);
                 }
-                if(isset($request->menus_id) && $request->menus_id > 0) {
+                if (isset($request->menus_id) && $request->menus_id > 0) {
                     Menu::where('id', $request->menus_id)->update([
                         'menu' => $request->menu,
                         'menu_url' => Str::slug($request->menu_url)
                     ]);
 
-                    if(isset($request->sub_menu)) {
+                    if (isset($request->sub_menu)) {
                         SubMenu::where('menu_id', $request->menus_id)->delete();
-                        foreach($request->sub_menu as $key => $submenu) {
+                        foreach ($request->sub_menu as $key => $submenu) {
                             SubMenu::create([
                                 'menu_id' => $request->menus_id,
                                 'sub_menu' => $submenu,
@@ -259,8 +255,8 @@ class HeaderController extends Controller
                     'status' => '0'
                 ]);
 
-                if(isset($request->sub_menu)) {
-                    foreach($request->sub_menu as $key => $submenu) {
+                if (isset($request->sub_menu)) {
+                    foreach ($request->sub_menu as $key => $submenu) {
                         SubMenu::create([
                             'menu_id' => $menu->id,
                             'sub_menu' => $submenu,
@@ -273,12 +269,11 @@ class HeaderController extends Controller
                     'success' => true,
                     'msg' => 'Menu Added successfully'
                 ], 201);
-
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 return response()->json(['Error' => $e->getMessage()]);
             }
-        } else if($request->isMethod('delete')) {
-            if(isset($request->menu_id) && $request->menu_id > 0) {
+        } else if ($request->isMethod('delete')) {
+            if (isset($request->menu_id) && $request->menu_id > 0) {
                 Menu::where('id', $request->menu_id)->delete();
                 SubMenu::where('menu_id', $request->menu_id)->delete();
                 return response()->json([
@@ -289,15 +284,22 @@ class HeaderController extends Controller
         }
     }
 
+    public function menuData()
+    {
+        // Return All Menus
+        $menu = Menu::with('sub_menus')->latest()->get();
+        return response()->json($menu);
+    }
+
     public function tag(Request $request)
     {
-        if($request->isMethod('get') && $request->ajax()) {
-            if(isset($request->tags_id) && $request->tags_id) {
+        if ($request->isMethod('get') && $request->ajax()) {
+            if (isset($request->tags_id) && $request->tags_id) {
                 // Update Status
-                if(isset($request->status)) {
-                    if($request->status == '0') {
+                if (isset($request->status)) {
+                    if ($request->status == '0') {
                         $request->status = '1';
-                    }else if($request->status == '1') {
+                    } else if ($request->status == '1') {
                         $request->status = '0';
                     }
                     Tag::where('id', $request->tags_id)->update([
@@ -316,17 +318,17 @@ class HeaderController extends Controller
             // Return All Tag
             $tags = Tag::with('category')->latest()->get();
             return response()->json($tags);
-        } else if($request->isMethod('get')) {
+        } else if ($request->isMethod('get')) {
             $categories = Category::all();
             return view('admin.pages.tags', compact('categories'));
-        }else if($request->isMethod('post')) {
+        } else if ($request->isMethod('post')) {
             try {
-                if(isset($request->tags_id) && $request->tags_id > 0) {
+                if (isset($request->tags_id) && $request->tags_id > 0) {
                     $rules = [
                         'category_id' => [
-                                        'required',
-                                        Rule::unique('tags')->ignore($request->tags_id),
-                                    ],
+                            'required',
+                            Rule::unique('tags')->ignore($request->tags_id),
+                        ],
                         'tags' => 'required'
 
                     ];
@@ -337,10 +339,10 @@ class HeaderController extends Controller
                     ];
                 }
                 $validator = Validator::make($request->all(), $rules);
-                if($validator->fails()) {
+                if ($validator->fails()) {
                     return response()->json(['errors' => $validator->getMessageBag()], 400);
                 }
-                if(isset($request->tags_id) && $request->tags_id > 0) {
+                if (isset($request->tags_id) && $request->tags_id > 0) {
                     Tag::where('id', $request->tags_id)->update([
                         'category_id' => $request->category_id,
                         'tags' => $request->tags
@@ -361,12 +363,11 @@ class HeaderController extends Controller
                     'success' => true,
                     'msg' => 'Tags Added successfully'
                 ], 201);
-
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 return response()->json(['Error' => $e->getMessage()]);
             }
-        } else if($request->isMethod('delete')) {
-            if(isset($request->tags_id) && $request->tags_id > 0) {
+        } else if ($request->isMethod('delete')) {
+            if (isset($request->tags_id) && $request->tags_id > 0) {
                 Tag::where('id', $request->tags_id)->delete();
                 return response()->json([
                     'success' => true,
@@ -375,5 +376,4 @@ class HeaderController extends Controller
             }
         }
     }
-
 }

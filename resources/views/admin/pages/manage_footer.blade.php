@@ -24,7 +24,7 @@
       <div class="content">
         <div class="container-fluid">
           <div class="row">
-            {{-- <a href="{{ route('footers.create') }}" class="btn btn-light ml-2 py-2"><i class="fas fa-plus mr-1"></i>Add</a> --}}
+            <a href="{{ route('footers.create') }}" class="btn btn-light ml-2 py-2"><i class="fas fa-plus mr-1"></i>Add</a>
             <div class="col-md-12 my-3">
                 <table class="table table-bordered">
                     <thead>
@@ -39,9 +39,9 @@
                     <tbody>
                             <tr>
                                 <td>{{ 1 }}</td>
-                                <td>{{ $footer['email'] }}</td>
-                                <td>{{ $footer['phone'] }}</td>
-                                <td>{{ $footer['address'] }}</td>
+                                <td>{{ $footer['email'] ?? "" }}</td>
+                                <td>{{ $footer['phone'] ?? "" }}</td>
+                                <td>{{ $footer['address'] ?? "" }}</td>
                                 <td><a href="{{ route('footers.edit', $footer['id']) }}" class="btn btn-light ml-2 py-2">Edit</a></td>
                             </tr>
                     </tbody>

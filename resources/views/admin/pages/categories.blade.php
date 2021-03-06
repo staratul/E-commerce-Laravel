@@ -61,8 +61,7 @@
                     var d = $.Deferred();
                     $.ajax({
                         url: "{{ route('admin.categories') }}",
-                        method: "GET",
-                        data: filter
+                        method: "GET"
                     }).done(function(result) {
                         result = $.grep(result, function(item) {
                             return (!filter.category || item.category.indexOf(filter.category) > -1)
